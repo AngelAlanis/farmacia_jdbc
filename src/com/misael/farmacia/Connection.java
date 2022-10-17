@@ -1,8 +1,6 @@
 package com.misael.farmacia;
 
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -175,9 +173,6 @@ public class Connection {
                 empleado.setCorreo(resultSet.getString("correo"));
             }
 
-            System.out.println(empleado);
-
-
             // Definición de los componentes del cuadro de diálogo
             JTextField tfIdEmpleado = new JTextField(empleado.getIdEmpleado());
             tfIdEmpleado.setEnabled(false);
@@ -190,12 +185,19 @@ public class Connection {
             JTextField tfCorreo          = new JTextField(empleado.getCorreo());
 
             Object[] interfazEmpleado = {
+                    new JLabel("ID Empleado"),
                     tfIdEmpleado,
+                    new JLabel("Nombre"),
                     tfNombre,
+                    new JLabel("Género"),
                     cbGenero,
+                    new JLabel("Fecha de nacimiento"),
                     tfFechaNacimiento,
+                    new JLabel("Domicilio"),
                     tfDomicilio,
+                    new JLabel("Teléfono"),
                     tfTelefono,
+                    new JLabel("Correo electrónico"),
                     tfCorreo,
             };
 
@@ -247,8 +249,6 @@ public class Connection {
                 producto.setExistencia(resultSet.getInt("existencia"));
             }
 
-            System.out.println(producto);
-
             JTextField tfFolioProducto = new JTextField(producto.getFolioProducto());
             tfFolioProducto.setEnabled(false);
             JTextField tfDescripcion = new JTextField(producto.getDescripcion());
@@ -257,10 +257,15 @@ public class Connection {
             JTextField tfExistencia  = new JTextField(String.valueOf(producto.getExistencia()));
 
             Object[] interfazProducto = {
+                    new JLabel("Folio del producto"),
                     tfFolioProducto,
+                    new JLabel("Descripción"),
                     tfDescripcion,
+                    new JLabel("Proveedor"),
                     tfProveedor,
+                    new JLabel("Precio"),
                     tfPrecio,
+                    new JLabel("Existencia"),
                     tfExistencia
             };
 
@@ -319,11 +324,17 @@ public class Connection {
             JTextField tfRFC       = new JTextField(proveedor.getRfc());
 
             Object[] interfazProveedor = {
+                    new JLabel("Clave de proveedor"),
                     tfProveedorClave,
+                    new JLabel("Nombre"),
                     tfNombre,
+                    new JLabel("Domicilio"),
                     tfDomicilio,
+                    new JLabel("Teléfono"),
                     tfTelefono,
+                    new JLabel("Correo"),
                     tfCorreo,
+                    new JLabel("RFC"),
                     tfRFC
             };
 

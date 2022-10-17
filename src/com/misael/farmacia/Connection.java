@@ -1,6 +1,8 @@
 package com.misael.farmacia;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -213,6 +215,58 @@ public class Connection {
             e.printStackTrace();
         }
     }
+
+    public void actualizarProducto(String folioProducto) {
+        String   SQLQuery = "SELECT * FROM producto WHERE folio_producto=?";
+        Producto producto = new Producto();
+
+        try {
+            PreparedStatement psQuery = connection.prepareStatement(SQLQuery);
+            psQuery.setString(1, folioProducto);
+
+            ResultSet resultSet = psQuery.executeQuery();
+
+            while (resultSet.next()) {
+                producto.setDescripcion(resultSet.getString("descripcion"));
+                producto.setIdProveedor(resultSet.getString("id_proveedor"));
+                producto.setPrecio(resultSet.getDouble("precio"));
+                producto.setExistencia(resultSet.getInt("existencia"));
+            }
+
+            JTextField tfDescripcion = new JTextField(producto.getDescripcion());
+            JTextField tfProveedor   = new JTextField(producto.getIdProveedor());
+            JTextField tfPrecio      = new JTextField(String.valueOf(producto.getPrecio()));
+            JTextField tfExistencia  = new JTextField(producto.getExistencia());
+
+            Object[] interfazProducto = {
+                    tfDescripcion,
+                    tfProveedor,
+                    tfPrecio,
+                    tfExistencia
+            };
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfazProducto, "Actualizar producto", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
+
+            if (confirmacion == JOptionPane.OK_OPTION) {
+                String SQLUpdate = "UPDATE producto SET descripcion=?, id_proveedor=?, precio=?, existencia=? WHERE folio_producto=?";
+
+                PreparedStatement psUpdate = connection.prepareStatement(SQLUpdate);
+
+                psUpdate.setString(1, tfDescripcion.getText());
+                psUpdate.setString(2, tfProveedor.getText());
+                psUpdate.setString(3, tfPrecio.getText());
+                psUpdate.setString(4, tfExistencia.getText());
+
+                psUpdate.executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "Actualización a " + folioProducto + " exitosa.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void actualizarProducto(int cantidadNueva, String folioProducto) {
         String sentenciaQuery   = "SELECT existencia FROM producto where folio_producto = '" + folioProducto + "'";

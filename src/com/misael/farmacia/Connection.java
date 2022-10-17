@@ -152,10 +152,10 @@ public class Connection {
         Empleado empleado = new Empleado();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery);
-            preparedStatement.setString(1, idEmpleado);
+            PreparedStatement psQuery = connection.prepareStatement(SQLQuery);
+            psQuery.setString(1, idEmpleado);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = psQuery.executeQuery();
 
             while (resultSet.next()) {
                 empleado.setIdEmpleado(resultSet.getString("id_empleado"));
@@ -193,24 +193,25 @@ public class Connection {
 
 
             // Actualización del empleado con los parámetros ingresados en los cuadros de texto
-            String SQLUpdate = "UPDATE empleado SET nombre=?, genero=?, fecha_nacimiento=?, domicilio=?, telefono=?, correo=? WHERE id_empleado=?";
 
-            PreparedStatement psUpdate = connection.prepareStatement(SQLUpdate);
-            psUpdate.setString(1, tfNombre.getText());
-            psUpdate.setString(2, cbGenero.getSelectedItem().toString());
-            psUpdate.setString(3, tfFechaNacimiento.getText());
-            psUpdate.setString(4, tfDomicilio.getText());
-            psUpdate.setString(5, tfTelefono.getText());
-            psUpdate.setString(6, tfCorreo.getText());
-            psUpdate.setString(7, tfIdEmpleado.getText());
+            if (confirmacion == JOptionPane.OK_OPTION) {
+                String            SQLUpdate = "UPDATE empleado SET nombre=?, genero=?, fecha_nacimiento=?, domicilio=?, telefono=?, correo=? WHERE id_empleado=?";
+                PreparedStatement psUpdate  = connection.prepareStatement(SQLUpdate);
+                psUpdate.setString(1, tfNombre.getText());
+                psUpdate.setString(2, cbGenero.getSelectedItem().toString());
+                psUpdate.setString(3, tfFechaNacimiento.getText());
+                psUpdate.setString(4, tfDomicilio.getText());
+                psUpdate.setString(5, tfTelefono.getText());
+                psUpdate.setString(6, tfCorreo.getText());
+                psUpdate.setString(7, tfIdEmpleado.getText());
 
-            psUpdate.executeUpdate();
+                psUpdate.executeUpdate();
 
+                JOptionPane.showMessageDialog(null, "Actualización a " + tfIdEmpleado.getText() + " exitosa.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        System.out.println(empleado);
     }
 
     public void actualizarProducto(int cantidadNueva, String folioProducto) {

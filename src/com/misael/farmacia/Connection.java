@@ -1,6 +1,11 @@
 package com.misael.farmacia;
 
-import java.sql.*;
+import javax.swing.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Connection {
 
@@ -140,6 +145,72 @@ public class Connection {
 
         actualizarProducto(detalleAbastecimiento.getCantidad(), detalleAbastecimiento.getFolioProducto());
 
+    }
+
+    public void actualizarEmpleado(String idEmpleado) {
+        String   SQLQuery = "SELECT * FROM empleado WHERE id_empleado = ?";
+        Empleado empleado = new Empleado();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery);
+            preparedStatement.setString(1, idEmpleado);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                empleado.setIdEmpleado(resultSet.getString("id_empleado"));
+                empleado.setNombre(resultSet.getString("nombre"));
+                empleado.setGenero(resultSet.getString("genero"));
+                empleado.setFechaNacimiento(resultSet.getDate("fecha_nacimiento"));
+                empleado.setDomicilio(resultSet.getString("domicilio"));
+                empleado.setTelefono(resultSet.getString("telefono"));
+                empleado.setCorreo(resultSet.getString("correo"));
+            }
+
+
+            // Definición de los componentes del cuadro de diálogo
+            JTextField tfIdEmpleado = new JTextField(empleado.getIdEmpleado());
+            tfIdEmpleado.setEnabled(false);
+            JTextField tfNombre = new JTextField(empleado.getNombre());
+            JComboBox  cbGenero = new JComboBox(new String[]{"Masculino", "Femenino"});
+            cbGenero.setSelectedItem(empleado.getGenero());
+            JTextField tfFechaNacimiento = new JTextField(empleado.getFechaNacimiento().toString());
+            JTextField tfDomicilio       = new JTextField(empleado.getDomicilio());
+            JTextField tfTelefono        = new JTextField(empleado.getTelefono());
+            JTextField tfCorreo          = new JTextField(empleado.getCorreo());
+
+            Object[] interfazEmpleado = {
+                    tfIdEmpleado,
+                    tfNombre,
+                    cbGenero,
+                    tfFechaNacimiento,
+                    tfDomicilio,
+                    tfTelefono,
+                    tfCorreo,
+            };
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfazEmpleado, "Actualizar empleado", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
+
+
+            // Actualización del empleado con los parámetros ingresados en los cuadros de texto
+            String SQLUpdate = "UPDATE empleado SET nombre=?, genero=?, fecha_nacimiento=?, domicilio=?, telefono=?, correo=? WHERE id_empleado=?";
+
+            PreparedStatement psUpdate = connection.prepareStatement(SQLUpdate);
+            psUpdate.setString(1, tfNombre.getText());
+            psUpdate.setString(2, cbGenero.getSelectedItem().toString());
+            psUpdate.setString(3, tfFechaNacimiento.getText());
+            psUpdate.setString(4, tfDomicilio.getText());
+            psUpdate.setString(5, tfTelefono.getText());
+            psUpdate.setString(6, tfCorreo.getText());
+            psUpdate.setString(7, tfIdEmpleado.getText());
+
+            psUpdate.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(empleado);
     }
 
     public void actualizarProducto(int cantidadNueva, String folioProducto) {

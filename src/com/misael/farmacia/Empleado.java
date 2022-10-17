@@ -68,6 +68,19 @@ public class Empleado {
         this.correo = correo;
     }
 
+    @Override
+    public String toString() {
+        return "Empleado{" +
+                "idEmpleado='" + idEmpleado + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", genero='" + genero + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
+                ", domicilio='" + domicilio + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", correo='" + correo + '\'' +
+                '}';
+    }
+
     public Empleado() {
     }
 

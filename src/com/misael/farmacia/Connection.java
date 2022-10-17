@@ -227,16 +227,19 @@ public class Connection {
             ResultSet resultSet = psQuery.executeQuery();
 
             while (resultSet.next()) {
+                producto.setFolioProducto(resultSet.getString("folio_producto"));
                 producto.setDescripcion(resultSet.getString("descripcion"));
                 producto.setIdProveedor(resultSet.getString("id_proveedor"));
                 producto.setPrecio(resultSet.getDouble("precio"));
                 producto.setExistencia(resultSet.getInt("existencia"));
             }
 
+            System.out.println(producto);
+
             JTextField tfDescripcion = new JTextField(producto.getDescripcion());
             JTextField tfProveedor   = new JTextField(producto.getIdProveedor());
             JTextField tfPrecio      = new JTextField(String.valueOf(producto.getPrecio()));
-            JTextField tfExistencia  = new JTextField(producto.getExistencia());
+            JTextField tfExistencia  = new JTextField(String.valueOf(producto.getExistencia()));
 
             Object[] interfazProducto = {
                     tfDescripcion,
@@ -256,6 +259,7 @@ public class Connection {
                 psUpdate.setString(2, tfProveedor.getText());
                 psUpdate.setString(3, tfPrecio.getText());
                 psUpdate.setString(4, tfExistencia.getText());
+                psUpdate.setString(5, folioProducto);
 
                 psUpdate.executeUpdate();
 

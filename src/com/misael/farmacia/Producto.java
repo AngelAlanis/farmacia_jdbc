@@ -48,6 +48,17 @@ public class Producto {
         this.existencia = existencia;
     }
 
+    @Override
+    public String toString() {
+        return "Producto{" +
+                "folioProducto='" + folioProducto + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", idProveedor='" + idProveedor + '\'' +
+                ", precio=" + precio +
+                ", existencia=" + existencia +
+                '}';
+    }
+
     public Producto() {
     }
 

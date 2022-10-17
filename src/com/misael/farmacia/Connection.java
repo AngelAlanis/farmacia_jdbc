@@ -159,6 +159,12 @@ public class Connection {
 
             ResultSet resultSet = psQuery.executeQuery();
 
+
+            if (!resultSet.isBeforeFirst()) {
+                JOptionPane.showMessageDialog(null, "Registro no encontrado");
+                return;
+            }
+
             while (resultSet.next()) {
                 empleado.setIdEmpleado(resultSet.getString("id_empleado"));
                 empleado.setNombre(resultSet.getString("nombre"));
@@ -168,6 +174,8 @@ public class Connection {
                 empleado.setTelefono(resultSet.getString("telefono"));
                 empleado.setCorreo(resultSet.getString("correo"));
             }
+
+            System.out.println(empleado);
 
 
             // Definición de los componentes del cuadro de diálogo
@@ -226,6 +234,11 @@ public class Connection {
 
             ResultSet resultSet = psQuery.executeQuery();
 
+            if (!resultSet.isBeforeFirst()) {
+                JOptionPane.showMessageDialog(null, "Registro no encontrado");
+                return;
+            }
+
             while (resultSet.next()) {
                 producto.setFolioProducto(resultSet.getString("folio_producto"));
                 producto.setDescripcion(resultSet.getString("descripcion"));
@@ -244,6 +257,7 @@ public class Connection {
             JTextField tfExistencia  = new JTextField(String.valueOf(producto.getExistencia()));
 
             Object[] interfazProducto = {
+                    tfFolioProducto,
                     tfDescripcion,
                     tfProveedor,
                     tfPrecio,
@@ -281,6 +295,11 @@ public class Connection {
             PreparedStatement psQuery = connection.prepareStatement(SQLQuery);
             psQuery.setString(1, proveedorClave);
             ResultSet resultSet = psQuery.executeQuery();
+
+            if (!resultSet.isBeforeFirst()) {
+                JOptionPane.showMessageDialog(null, "Registro no encontrado");
+                return;
+            }
 
             while (resultSet.next()) {
                 proveedor.setProveedorClave(resultSet.getString("proveedor_clave"));

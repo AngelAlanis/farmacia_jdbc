@@ -6,7 +6,7 @@ public class Empleado {
 
     private String idEmpleado;
     private String nombre;
-    private String    genero;
+    private String genero;
     private Date   fechaNacimiento;
     private String domicilio;
     private String telefono;

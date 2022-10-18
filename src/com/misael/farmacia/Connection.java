@@ -1,11 +1,10 @@
 package com.misael.farmacia;
 
 import javax.swing.*;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import javax.swing.table.DefaultTableModel;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Vector;
 
 public class Connection {
 
@@ -185,20 +184,13 @@ public class Connection {
             JTextField tfCorreo          = new JTextField(empleado.getCorreo());
 
             Object[] interfazEmpleado = {
-                    new JLabel("ID Empleado"),
-                    tfIdEmpleado,
-                    new JLabel("Nombre"),
-                    tfNombre,
-                    new JLabel("Género"),
-                    cbGenero,
-                    new JLabel("Fecha de nacimiento"),
-                    tfFechaNacimiento,
-                    new JLabel("Domicilio"),
-                    tfDomicilio,
-                    new JLabel("Teléfono"),
-                    tfTelefono,
-                    new JLabel("Correo electrónico"),
-                    tfCorreo,
+                    new JLabel("ID Empleado"), tfIdEmpleado,
+                    new JLabel("Nombre"), tfNombre,
+                    new JLabel("Género"), cbGenero,
+                    new JLabel("Fecha de nacimiento"), tfFechaNacimiento,
+                    new JLabel("Domicilio"), tfDomicilio,
+                    new JLabel("Teléfono"), tfTelefono,
+                    new JLabel("Correo electrónico"), tfCorreo
             };
 
             int confirmacion = JOptionPane.showConfirmDialog(null, interfazEmpleado, "Actualizar empleado", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
@@ -249,6 +241,8 @@ public class Connection {
                 producto.setExistencia(resultSet.getInt("existencia"));
             }
 
+            JTable jTable = new JTable();
+            jTable.setModel(fillTable("SELECT * FROM producto"));
             JTextField tfFolioProducto = new JTextField(producto.getFolioProducto());
             tfFolioProducto.setEnabled(false);
             JTextField tfDescripcion = new JTextField(producto.getDescripcion());
@@ -257,6 +251,7 @@ public class Connection {
             JTextField tfExistencia  = new JTextField(String.valueOf(producto.getExistencia()));
 
             Object[] interfazProducto = {
+                    jTable,
                     new JLabel("Folio del producto"),
                     tfFolioProducto,
                     new JLabel("Descripción"),
@@ -290,6 +285,62 @@ public class Connection {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<Object> crearInterfaz(String SQLQuery, String llave) {
+        ArrayList<String> datos             = new ArrayList<>();
+        ArrayList<String> nombresParametros = new ArrayList<>();
+        ArrayList<Object> interfaz          = new ArrayList<>();
+
+        try {
+            PreparedStatement psQuery = connection.prepareStatement(SQLQuery);
+            psQuery.setString(1, llave);
+            ResultSet resultSet = psQuery.executeQuery();
+
+            if (!resultSet.isBeforeFirst()) {
+                JOptionPane.showMessageDialog(null, "Registro no encontrado");
+                return null;
+            }
+
+            int columnas = resultSet.getMetaData().getColumnCount();
+
+            for (int i = 1; i <= columnas; i++) {
+                nombresParametros.add(resultSet.getMetaData().getColumnName(i));
+            }
+
+            while (resultSet.next()) {
+                for (int i = 1; i <= columnas; i++) {
+                    datos.add(resultSet.getString(i));
+                }
+            }
+
+            ArrayList<JTextField> textFields = new ArrayList<>();
+
+            for (int i = 0; i < columnas; i++) {
+                textFields.add(new JTextField(datos.get(i)));
+            }
+
+            textFields.get(0).setEnabled(false);
+            int i = 0;
+            while (i < nombresParametros.size() || i < datos.size()) {
+                if (!nombresParametros.get(i).isEmpty()) {
+                    interfaz.add(new JLabel(nombresParametros.get(i)));
+                }
+
+                if (!datos.get(i).isEmpty()) {
+                    interfaz.add(textFields.get(i));
+                }
+                i++;
+            }
+
+            Object[] interfazObjeto = interfaz.toArray();
+            int      confirmacion   = JOptionPane.showConfirmDialog(null, interfazObjeto, "Hola", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return interfaz;
     }
 
     public void actualizarProveedor(String proveedorClave) {
@@ -397,6 +448,43 @@ public class Connection {
         }
 
     }
+
+    public DefaultTableModel fillTable(String sqlQuery) {
+        Vector<Vector<Object>> data        = new Vector<>();
+        int                    columns;
+        Vector<Object>         columnNames = new Vector<>();
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sqlQuery);
+
+            columns = resultSet.getMetaData().getColumnCount();
+
+            for (int i = 1; i <= columns; i++) {
+                columnNames.add(resultSet.getMetaData().getColumnName(i));
+            }
+
+            while (resultSet.next()) {
+                Vector<Object> row = new Vector<>();
+
+                for (int i = 1; i <= columns; i++) {
+                    row.add(resultSet.getObject(i));
+                }
+
+                data.add(row);
+            }
+
+            resultSet.close();
+            statement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new DefaultTableModel(data, columnNames);
+
+    }
+
 
     public Connection() {
         connect();

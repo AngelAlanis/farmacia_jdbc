@@ -288,9 +288,10 @@ public class Connection {
     }
 
     public ArrayList<Object> crearInterfaz(String SQLQuery, String llave) {
-        ArrayList<String> datos             = new ArrayList<>();
-        ArrayList<String> nombresParametros = new ArrayList<>();
-        ArrayList<Object> interfaz          = new ArrayList<>();
+        ArrayList<String>     datos             = new ArrayList<>();
+        ArrayList<String>     nombresParametros = new ArrayList<>();
+        ArrayList<Object>     elementosInterfaz = new ArrayList<>();
+        ArrayList<JTextField> textFields        = new ArrayList<>();
 
         try {
             PreparedStatement psQuery = connection.prepareStatement(SQLQuery);
@@ -304,43 +305,38 @@ public class Connection {
 
             int columnas = resultSet.getMetaData().getColumnCount();
 
-            for (int i = 1; i <= columnas; i++) {
-                nombresParametros.add(resultSet.getMetaData().getColumnName(i));
-            }
-
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 for (int i = 1; i <= columnas; i++) {
+                    nombresParametros.add(resultSet.getMetaData().getColumnName(i));
                     datos.add(resultSet.getString(i));
+                    textFields.add(new JTextField(datos.get(i - 1)));
                 }
             }
 
-            ArrayList<JTextField> textFields = new ArrayList<>();
-
-            for (int i = 0; i < columnas; i++) {
-                textFields.add(new JTextField(datos.get(i)));
-            }
-
+            // Bloquear textField de la llave primaria
             textFields.get(0).setEnabled(false);
+
             int i = 0;
             while (i < nombresParametros.size() || i < datos.size()) {
+                // Intercalar entre jLabel y textFields
+
                 if (!nombresParametros.get(i).isEmpty()) {
-                    interfaz.add(new JLabel(nombresParametros.get(i)));
+                    elementosInterfaz.add(new JLabel(nombresParametros.get(i)));
                 }
 
                 if (!datos.get(i).isEmpty()) {
-                    interfaz.add(textFields.get(i));
+                    elementosInterfaz.add(textFields.get(i));
                 }
                 i++;
             }
 
-            Object[] interfazObjeto = interfaz.toArray();
+            Object[] interfazObjeto = elementosInterfaz.toArray();
             int      confirmacion   = JOptionPane.showConfirmDialog(null, interfazObjeto, "Hola", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
-
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return interfaz;
+        return elementosInterfaz;
     }
 
     public void actualizarProveedor(String proveedorClave) {

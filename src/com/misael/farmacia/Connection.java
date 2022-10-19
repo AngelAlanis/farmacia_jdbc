@@ -220,78 +220,40 @@ public class Connection {
 
     public void actualizarProducto(String folioProducto) {
         String   SQLQuery = "SELECT * FROM producto WHERE folio_producto=?";
-        Producto producto = new Producto();
+        String                SQLUpdate       = "UPDATE producto SET descripcion=?, id_proveedor=?, precio=?, existencia=? WHERE folio_producto=?";
 
-        try {
-            PreparedStatement psQuery = connection.prepareStatement(SQLQuery);
-            psQuery.setString(1, folioProducto);
-
-            ResultSet resultSet = psQuery.executeQuery();
-
-            if (!resultSet.isBeforeFirst()) {
-                JOptionPane.showMessageDialog(null, "Registro no encontrado");
-                return;
-            }
-
-            while (resultSet.next()) {
-                producto.setFolioProducto(resultSet.getString("folio_producto"));
-                producto.setDescripcion(resultSet.getString("descripcion"));
-                producto.setIdProveedor(resultSet.getString("id_proveedor"));
-                producto.setPrecio(resultSet.getDouble("precio"));
-                producto.setExistencia(resultSet.getInt("existencia"));
-            }
-
-            JTable jTable = new JTable();
-            jTable.setModel(fillTable("SELECT * FROM producto"));
-            JTextField tfFolioProducto = new JTextField(producto.getFolioProducto());
-            tfFolioProducto.setEnabled(false);
-            JTextField tfDescripcion = new JTextField(producto.getDescripcion());
-            JTextField tfProveedor   = new JTextField(producto.getIdProveedor());
-            JTextField tfPrecio      = new JTextField(String.valueOf(producto.getPrecio()));
-            JTextField tfExistencia  = new JTextField(String.valueOf(producto.getExistencia()));
-
-            Object[] interfazProducto = {
-                    jTable,
-                    new JLabel("Folio del producto"),
-                    tfFolioProducto,
-                    new JLabel("Descripción"),
-                    tfDescripcion,
-                    new JLabel("Proveedor"),
-                    tfProveedor,
-                    new JLabel("Precio"),
-                    tfPrecio,
-                    new JLabel("Existencia"),
-                    tfExistencia
-            };
-
-            int confirmacion = JOptionPane.showConfirmDialog(null, interfazProducto, "Actualizar producto", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
-
-            if (confirmacion == JOptionPane.OK_OPTION) {
-                String SQLUpdate = "UPDATE producto SET descripcion=?, id_proveedor=?, precio=?, existencia=? WHERE folio_producto=?";
-
-                PreparedStatement psUpdate = connection.prepareStatement(SQLUpdate);
-
-                psUpdate.setString(1, tfDescripcion.getText());
-                psUpdate.setString(2, tfProveedor.getText());
-                psUpdate.setString(3, tfPrecio.getText());
-                psUpdate.setString(4, tfExistencia.getText());
-                psUpdate.setString(5, folioProducto);
-
-                psUpdate.executeUpdate();
-
-                JOptionPane.showMessageDialog(null, "Actualización a " + folioProducto + " exitosa.");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        ArrayList<JTextField> listaTextFields = crearInterfaz(SQLQuery, folioProducto);
+        actualizarTabla(SQLUpdate, listaTextFields);
     }
 
-    public ArrayList<Object> crearInterfaz(String SQLQuery, String llave) {
+    public void actualizarTabla(String SQLUpdate, ArrayList<JTextField> textFields) {
+        if (!textFields.isEmpty()) {
+            int numeroParametros = textFields.size();
+            try {
+                PreparedStatement psUpdate = connection.prepareStatement(SQLUpdate);
+
+                for (int i = 1; i < textFields.size(); i++) {
+                    psUpdate.setString(i, String.valueOf(textFields.get(i).getText()));
+                }
+
+                psUpdate.setString(numeroParametros, textFields.get(0).getText());
+
+                psUpdate.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            JOptionPane.showMessageDialog(null, "Actualización exitosa.");
+        }
+
+    }
+
+    public ArrayList<JTextField> crearInterfaz(String SQLQuery, String llave) {
         ArrayList<String>     datos             = new ArrayList<>();
         ArrayList<String>     nombresParametros = new ArrayList<>();
         ArrayList<Object>     elementosInterfaz = new ArrayList<>();
         ArrayList<JTextField> textFields        = new ArrayList<>();
+        Object[]              interfazObjeto    = new Object[0];
 
         try {
             PreparedStatement psQuery = connection.prepareStatement(SQLQuery);
@@ -330,13 +292,18 @@ public class Connection {
                 i++;
             }
 
-            Object[] interfazObjeto = elementosInterfaz.toArray();
-            int      confirmacion   = JOptionPane.showConfirmDialog(null, interfazObjeto, "Hola", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
+            interfazObjeto = elementosInterfaz.toArray();
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfazObjeto, "Hola", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
+
+            if (confirmacion == JOptionPane.OK_OPTION) {
+                return textFields;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return elementosInterfaz;
+        return null;
     }
 
     public void actualizarProveedor(String proveedorClave) {

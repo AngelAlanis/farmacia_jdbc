@@ -162,6 +162,14 @@ public class Connection {
         actualizarTabla(SQLUpdate, listaTextFields);
     }
 
+    public void actualizarProveedor(String proveedorClave) {
+        String SQLQuery  = "SELECT * FROM proveedor WHERE proveedor_clave=?";
+        String SQLUpdate = "UPDATE proveedor SET nombre=?, domicilio=?, telefono=?, correo=?, rfc=? WHERE proveedor_clave=?";
+
+        ArrayList<JTextField> listaTextFields = crearInterfaz(SQLQuery, proveedorClave);
+        actualizarTabla(SQLUpdate, listaTextFields);
+    }
+
     public void actualizarTabla(String SQLUpdate, ArrayList<JTextField> textFields) {
         if (!textFields.isEmpty()) {
             int numeroParametros = textFields.size();
@@ -240,75 +248,6 @@ public class Connection {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public void actualizarProveedor(String proveedorClave) {
-        String    SQLQuery  = "SELECT * FROM proveedor WHERE proveedor_clave=?";
-        Proveedor proveedor = new Proveedor();
-
-        try {
-            PreparedStatement psQuery = connection.prepareStatement(SQLQuery);
-            psQuery.setString(1, proveedorClave);
-            ResultSet resultSet = psQuery.executeQuery();
-
-            if (!resultSet.isBeforeFirst()) {
-                JOptionPane.showMessageDialog(null, "Registro no encontrado");
-                return;
-            }
-
-            while (resultSet.next()) {
-                proveedor.setProveedorClave(resultSet.getString("proveedor_clave"));
-                proveedor.setNombre(resultSet.getString("nombre"));
-                proveedor.setDomicilio(resultSet.getString("domicilio"));
-                proveedor.setTelefono(resultSet.getString("telefono"));
-                proveedor.setCorreo(resultSet.getString("correo"));
-                proveedor.setRfc(resultSet.getString("rfc"));
-            }
-
-            JTextField tfProveedorClave = new JTextField(proveedor.getProveedorClave());
-            tfProveedorClave.setEnabled(false);
-            JTextField tfNombre    = new JTextField(proveedor.getNombre());
-            JTextField tfDomicilio = new JTextField(proveedor.getDomicilio());
-            JTextField tfTelefono  = new JTextField(proveedor.getTelefono());
-            JTextField tfCorreo    = new JTextField(proveedor.getCorreo());
-            JTextField tfRFC       = new JTextField(proveedor.getRfc());
-
-            Object[] interfazProveedor = {
-                    new JLabel("Clave de proveedor"),
-                    tfProveedorClave,
-                    new JLabel("Nombre"),
-                    tfNombre,
-                    new JLabel("Domicilio"),
-                    tfDomicilio,
-                    new JLabel("Teléfono"),
-                    tfTelefono,
-                    new JLabel("Correo"),
-                    tfCorreo,
-                    new JLabel("RFC"),
-                    tfRFC
-            };
-
-            int confirmacion = JOptionPane.showConfirmDialog(null, interfazProveedor, "Actualización proveedor", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
-
-            if (confirmacion == JOptionPane.OK_OPTION) {
-                String SQLUpdate = "UPDATE proveedor SET nombre=?, domicilio=?, telefono=?, correo=?, rfc=? WHERE proveedor_clave=?";
-
-                PreparedStatement psUpdate = connection.prepareStatement(SQLUpdate);
-                psUpdate.setString(1, tfNombre.getText());
-                psUpdate.setString(2, tfDomicilio.getText());
-                psUpdate.setString(3, tfTelefono.getText());
-                psUpdate.setString(4, tfCorreo.getText());
-                psUpdate.setString(5, tfRFC.getText());
-                psUpdate.setString(6, proveedorClave);
-
-                psUpdate.executeUpdate();
-
-                JOptionPane.showMessageDialog(null, "Actualización a " + proveedorClave + " exitosa.");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public void actualizarProducto(int cantidadNueva, String folioProducto) {

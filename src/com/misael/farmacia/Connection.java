@@ -147,80 +147,16 @@ public class Connection {
     }
 
     public void actualizarEmpleado(String idEmpleado) {
-        String   SQLQuery = "SELECT * FROM empleado WHERE id_empleado = ?";
-        Empleado empleado = new Empleado();
+        String SQLQuery  = "SELECT * FROM empleado WHERE id_empleado = ?";
+        String SQLUpdate = "UPDATE empleado SET nombre=?, genero=?, fecha_nacimiento=?, domicilio=?, telefono=?, correo=? WHERE id_empleado=?";
 
-        try {
-            PreparedStatement psQuery = connection.prepareStatement(SQLQuery);
-            psQuery.setString(1, idEmpleado);
-
-            ResultSet resultSet = psQuery.executeQuery();
-
-
-            if (!resultSet.isBeforeFirst()) {
-                JOptionPane.showMessageDialog(null, "Registro no encontrado");
-                return;
-            }
-
-            while (resultSet.next()) {
-                empleado.setIdEmpleado(resultSet.getString("id_empleado"));
-                empleado.setNombre(resultSet.getString("nombre"));
-                empleado.setGenero(resultSet.getString("genero"));
-                empleado.setFechaNacimiento(resultSet.getDate("fecha_nacimiento"));
-                empleado.setDomicilio(resultSet.getString("domicilio"));
-                empleado.setTelefono(resultSet.getString("telefono"));
-                empleado.setCorreo(resultSet.getString("correo"));
-            }
-
-            // Definición de los componentes del cuadro de diálogo
-            JTextField tfIdEmpleado = new JTextField(empleado.getIdEmpleado());
-            tfIdEmpleado.setEnabled(false);
-            JTextField tfNombre = new JTextField(empleado.getNombre());
-            JComboBox  cbGenero = new JComboBox(new String[]{"Masculino", "Femenino"});
-            cbGenero.setSelectedItem(empleado.getGenero());
-            JTextField tfFechaNacimiento = new JTextField(empleado.getFechaNacimiento().toString());
-            JTextField tfDomicilio       = new JTextField(empleado.getDomicilio());
-            JTextField tfTelefono        = new JTextField(empleado.getTelefono());
-            JTextField tfCorreo          = new JTextField(empleado.getCorreo());
-
-            Object[] interfazEmpleado = {
-                    new JLabel("ID Empleado"), tfIdEmpleado,
-                    new JLabel("Nombre"), tfNombre,
-                    new JLabel("Género"), cbGenero,
-                    new JLabel("Fecha de nacimiento"), tfFechaNacimiento,
-                    new JLabel("Domicilio"), tfDomicilio,
-                    new JLabel("Teléfono"), tfTelefono,
-                    new JLabel("Correo electrónico"), tfCorreo
-            };
-
-            int confirmacion = JOptionPane.showConfirmDialog(null, interfazEmpleado, "Actualizar empleado", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
-
-
-            // Actualización del empleado con los parámetros ingresados en los cuadros de texto
-
-            if (confirmacion == JOptionPane.OK_OPTION) {
-                String            SQLUpdate = "UPDATE empleado SET nombre=?, genero=?, fecha_nacimiento=?, domicilio=?, telefono=?, correo=? WHERE id_empleado=?";
-                PreparedStatement psUpdate  = connection.prepareStatement(SQLUpdate);
-                psUpdate.setString(1, tfNombre.getText());
-                psUpdate.setString(2, cbGenero.getSelectedItem().toString());
-                psUpdate.setString(3, tfFechaNacimiento.getText());
-                psUpdate.setString(4, tfDomicilio.getText());
-                psUpdate.setString(5, tfTelefono.getText());
-                psUpdate.setString(6, tfCorreo.getText());
-                psUpdate.setString(7, tfIdEmpleado.getText());
-
-                psUpdate.executeUpdate();
-
-                JOptionPane.showMessageDialog(null, "Actualización a " + tfIdEmpleado.getText() + " exitosa.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        ArrayList<JTextField> listaTextFields = crearInterfaz(SQLQuery, idEmpleado);
+        actualizarTabla(SQLUpdate, listaTextFields);
     }
 
     public void actualizarProducto(String folioProducto) {
-        String   SQLQuery = "SELECT * FROM producto WHERE folio_producto=?";
-        String                SQLUpdate       = "UPDATE producto SET descripcion=?, id_proveedor=?, precio=?, existencia=? WHERE folio_producto=?";
+        String SQLQuery  = "SELECT * FROM producto WHERE folio_producto=?";
+        String SQLUpdate = "UPDATE producto SET descripcion=?, id_proveedor=?, precio=?, existencia=? WHERE folio_producto=?";
 
         ArrayList<JTextField> listaTextFields = crearInterfaz(SQLQuery, folioProducto);
         actualizarTabla(SQLUpdate, listaTextFields);

@@ -172,7 +172,9 @@ public class Connection {
 
     public void actualizarTabla(String SQLUpdate, ArrayList<JTextField> textFields) {
         if (!textFields.isEmpty()) {
-            int numeroParametros = textFields.size();
+
+            int numeroColumnas = textFields.size();
+
             try {
                 PreparedStatement psUpdate = connection.prepareStatement(SQLUpdate);
 
@@ -180,9 +182,10 @@ public class Connection {
                     psUpdate.setString(i, String.valueOf(textFields.get(i).getText()));
                 }
 
-                psUpdate.setString(numeroParametros, textFields.get(0).getText());
+                psUpdate.setString(numeroColumnas, textFields.get(0).getText());
 
                 psUpdate.executeUpdate();
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -193,11 +196,10 @@ public class Connection {
     }
 
     public ArrayList<JTextField> crearInterfaz(String SQLQuery, String llave) {
-        ArrayList<String>     datos             = new ArrayList<>();
-        ArrayList<String>     nombresParametros = new ArrayList<>();
+        ArrayList<String>     datosIniciales    = new ArrayList<>();
+        ArrayList<String>     nombresColumnas   = new ArrayList<>();
         ArrayList<Object>     elementosInterfaz = new ArrayList<>();
         ArrayList<JTextField> textFields        = new ArrayList<>();
-        Object[]              interfazObjeto    = new Object[0];
 
         try {
             PreparedStatement psQuery = connection.prepareStatement(SQLQuery);
@@ -209,13 +211,13 @@ public class Connection {
                 return null;
             }
 
-            int columnas = resultSet.getMetaData().getColumnCount();
+            int columnCount = resultSet.getMetaData().getColumnCount();
 
             if (resultSet.next()) {
-                for (int i = 1; i <= columnas; i++) {
-                    nombresParametros.add(resultSet.getMetaData().getColumnName(i));
-                    datos.add(resultSet.getString(i));
-                    textFields.add(new JTextField(datos.get(i - 1)));
+                for (int i = 1; i <= columnCount; i++) {
+                    nombresColumnas.add(resultSet.getMetaData().getColumnName(i));
+                    datosIniciales.add(resultSet.getString(i));
+                    textFields.add(new JTextField(datosIniciales.get(i - 1)));
                 }
             }
 
@@ -223,20 +225,20 @@ public class Connection {
             textFields.get(0).setEnabled(false);
 
             int i = 0;
-            while (i < nombresParametros.size() || i < datos.size()) {
+            while (i < nombresColumnas.size() || i < datosIniciales.size()) {
                 // Intercalar entre jLabel y textFields
 
-                if (!nombresParametros.get(i).isEmpty()) {
-                    elementosInterfaz.add(new JLabel(nombresParametros.get(i)));
+                if (!nombresColumnas.get(i).isEmpty()) {
+                    elementosInterfaz.add(new JLabel(nombresColumnas.get(i)));
                 }
 
-                if (!datos.get(i).isEmpty()) {
+                if (!datosIniciales.get(i).isEmpty()) {
                     elementosInterfaz.add(textFields.get(i));
                 }
                 i++;
             }
 
-            interfazObjeto = elementosInterfaz.toArray();
+            Object[] interfazObjeto = elementosInterfaz.toArray();
 
             int confirmacion = JOptionPane.showConfirmDialog(null, interfazObjeto, "Hola", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
 

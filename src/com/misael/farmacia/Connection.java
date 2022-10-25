@@ -1,8 +1,16 @@
 package com.misael.farmacia;
 
-import javax.swing.*;
+import com.mysql.cj.jdbc.exceptions.ConnectionFeatureNotAvailableException;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -33,6 +41,8 @@ public class Connection {
             e.printStackTrace();
         }
     }
+
+    // Métodos de inserción
 
     public void insertarEmpleado(Empleado empleado) {
         String sentenciaSQL = "INSERT empleado VALUES(?,?,?,?,?,?,?)";
@@ -146,6 +156,8 @@ public class Connection {
 
     }
 
+    // Métodos de actualización
+
     public void actualizarEmpleado(String idEmpleado) {
         String SQLQuery  = "SELECT * FROM empleado WHERE id_empleado = ?";
         String SQLUpdate = "UPDATE empleado SET nombre=?, genero=?, fecha_nacimiento=?, domicilio=?, telefono=?, correo=? WHERE id_empleado=?";
@@ -169,6 +181,102 @@ public class Connection {
         ArrayList<JTextField> listaTextFields = crearInterfaz(SQLQuery, proveedorClave);
         actualizarTabla(SQLUpdate, listaTextFields);
     }
+
+    // Métodos de eliminación
+
+    public void eliminarEmpleado(String idEmpleado) {
+        String sentenciaSQL = "DELETE FROM empleado WHERE id_empleado=?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, idEmpleado);
+            int filasAfectadas = preparedStatement.executeUpdate();
+
+            System.out.println("Filas afectadas: " + filasAfectadas);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarProveedor(String proveedorClave) {
+        String sentenciaSQL = "DELETE FROM proveedor WHERE proveedor_clave=?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, proveedorClave);
+            int filasAfectadas = preparedStatement.executeUpdate();
+
+            System.out.println("Filas afectadas: " + filasAfectadas);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarProducto(String folioProducto) {
+        String sentenciaSQL = "DELETE FROM producto WHERE folio_producto=?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, folioProducto);
+            int filasAfectadas = preparedStatement.executeUpdate();
+
+            System.out.println("Filas afectadas: " + filasAfectadas);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarAbastecimiento(String clave) {
+        String sentenciaSQLAbastecimiento        = "DELETE FROM abastecimiento WHERE clave=?";
+        String sentenciaSQLDetalleAbastecimiento = "DELETE FROM detalle_abastecimiento WHERE folio_abastecimiento=?";
+
+        try {
+            connection.setAutoCommit(false);
+
+            PreparedStatement psAbastecimiento = connection.prepareStatement(sentenciaSQLAbastecimiento);
+            PreparedStatement psDetalles       = connection.prepareStatement(sentenciaSQLDetalleAbastecimiento);
+
+            psAbastecimiento.setString(1, clave);
+            psDetalles.setString(1, clave);
+
+            psAbastecimiento.executeUpdate();
+            psDetalles.executeUpdate();
+
+            connection.commit();
+            connection.setAutoCommit(true);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+    }
+
+    public void eliminarDetalleAbastecimiento(String folioProducto) {
+        String sentenciaSQL = "DELETE FROM producto WHERE folio_producto=?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, folioProducto);
+            int filasAfectadas = preparedStatement.executeUpdate();
+
+            System.out.println("Filas afectadas: " + filasAfectadas);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // Métodos extra
 
     public void actualizarTabla(String SQLUpdate, ArrayList<JTextField> textFields) {
         if (!textFields.isEmpty()) {

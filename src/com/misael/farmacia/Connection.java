@@ -152,7 +152,7 @@ public class Connection {
             e.printStackTrace();
         }
 
-        actualizarProducto(detalleAbastecimiento.getCantidad(), detalleAbastecimiento.getFolioProducto());
+        actualizarProducto(detalleAbastecimiento.getCantidad(), detalleAbastecimiento.getFolioProducto(), true);
 
     }
 
@@ -195,7 +195,7 @@ public class Connection {
             e.printStackTrace();
         }
 
-        actualizarProducto(detalleVenta.getCantidad(), detalleVenta.getFolioProducto());
+        actualizarProducto(detalleVenta.getCantidad(), detalleVenta.getFolioProducto(), false);
     }
 
 
@@ -387,7 +387,7 @@ public class Connection {
         return null;
     }
 
-    public void actualizarProducto(int cantidadNueva, String folioProducto) {
+    public void actualizarProducto(int cantidadNueva, String folioProducto, boolean aumento) {
         String sentenciaQuery   = "SELECT existencia FROM producto where folio_producto = '" + folioProducto + "'";
         int    cantidadAnterior = 0;
         int    cantidadTotal    = 0;
@@ -403,7 +403,11 @@ public class Connection {
             e.printStackTrace();
         }
 
-        cantidadTotal = cantidadAnterior + cantidadNueva;
+        if (aumento) {
+            cantidadTotal = cantidadAnterior + cantidadNueva;
+        } else {
+            cantidadTotal = cantidadAnterior - cantidadNueva;
+        }
 
         String sentenciaSQL = "UPDATE producto SET existencia = ? WHERE producto.folio_producto = ?";
 

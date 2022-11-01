@@ -156,6 +156,49 @@ public class Connection {
 
     }
 
+    public void insertarVenta(Venta venta) {
+        String sentenciaSQL = "INSERT into venta VALUES(?,?,?,?,?)";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+
+            preparedStatement.setString(1, null);
+            preparedStatement.setString(2, venta.getIdDetalles());
+            preparedStatement.setString(3, venta.getIdEmpleado());
+            preparedStatement.setDouble(4, venta.getTotalAPagar());
+            preparedStatement.setDouble(5, venta.getTotalPagado());
+
+            int filasAfectadas = preparedStatement.executeUpdate();
+
+            System.out.println("Filas afectadas: " + filasAfectadas);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void insertarDetalleVenta(DetalleVenta detalleVenta) {
+        String sentenciaSQL = "INSERT into detalle_venta VALUES(?,?,?,?)";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+
+            preparedStatement.setString(1, null);
+            preparedStatement.setString(2, detalleVenta.getIdDetalles());
+            preparedStatement.setString(3, detalleVenta.getFolioProducto());
+            preparedStatement.setInt(4, detalleVenta.getCantidad());
+
+            int filasAfectadas = preparedStatement.executeUpdate();
+
+            System.out.println("Filas afectadas: " + filasAfectadas);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        actualizarProducto(detalleVenta.getCantidad(), detalleVenta.getFolioProducto());
+    }
+
+
     // Métodos de actualización
 
     public void actualizarEmpleado(String idEmpleado) {

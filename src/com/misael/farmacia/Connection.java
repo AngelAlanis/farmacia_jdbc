@@ -303,22 +303,6 @@ public class Connection {
         }
     }
 
-    public void eliminarDetalleAbastecimiento(String folioProducto) {
-        String sentenciaSQL = "DELETE FROM producto WHERE folio_producto=?";
-
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
-            preparedStatement.setString(1, folioProducto);
-            int filasAfectadas = preparedStatement.executeUpdate();
-
-            System.out.println("Filas afectadas: " + filasAfectadas);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     // Métodos extra
 
     public void actualizarTabla(String SQLUpdate, ArrayList<JTextField> textFields) {

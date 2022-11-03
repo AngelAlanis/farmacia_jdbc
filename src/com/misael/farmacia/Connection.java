@@ -2,9 +2,7 @@ package com.misael.farmacia;
 
 import com.mysql.cj.jdbc.exceptions.ConnectionFeatureNotAvailableException;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,7 +14,7 @@ import java.util.Vector;
 
 public class Connection {
 
-    private java.sql.Connection connection;
+    public java.sql.Connection connection;
 
     public void connect() {
         try {
@@ -426,6 +424,22 @@ public class Connection {
             e.printStackTrace();
         }
 
+    }
+
+    // Consultas
+
+    public void realizarConsulta(String SQLQuery){
+        JTable tablaConsultas = new JTable();
+        JScrollPane jScrollPane = new JScrollPane(tablaConsultas);
+
+        tablaConsultas.setModel(fillTable(SQLQuery));
+
+        Object[] elementosinterfaz = {
+                new JLabel("Resultado consulta"),
+                jScrollPane
+        };
+
+        JOptionPane.showMessageDialog(null, elementosinterfaz);
     }
 
     public DefaultTableModel fillTable(String sqlQuery) {

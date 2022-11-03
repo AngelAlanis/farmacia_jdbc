@@ -2,19 +2,10 @@ package com.misael.farmacia;
 
 public class Venta {
 
-    private String folioVenta;
     private String idDetalles;
     private String idEmpleado;
     private Double totalAPagar;
     private Double totalPagado;
-
-    public String getFolioVenta() {
-        return folioVenta;
-    }
-
-    public void setFolioVenta(String folioVenta) {
-        this.folioVenta = folioVenta;
-    }
 
     public String getIdDetalles() {
         return idDetalles;
@@ -51,8 +42,7 @@ public class Venta {
     public Venta() {
     }
 
-    public Venta(String folioVenta, String idDetalles, String idEmpleado, Double totalAPagar, Double totalPagado) {
-        this.folioVenta  = folioVenta;
+    public Venta(String idDetalles, String idEmpleado, Double totalAPagar, Double totalPagado) {
         this.idDetalles  = idDetalles;
         this.idEmpleado  = idEmpleado;
         this.totalAPagar = totalAPagar;

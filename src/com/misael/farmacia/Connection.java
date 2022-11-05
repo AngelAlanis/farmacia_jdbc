@@ -2,9 +2,7 @@ package com.misael.farmacia;
 
 import com.mysql.cj.jdbc.exceptions.ConnectionFeatureNotAvailableException;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,7 +14,7 @@ import java.util.Vector;
 
 public class Connection {
 
-    private java.sql.Connection connection;
+    public java.sql.Connection connection;
 
     public void connect() {
         try {
@@ -152,9 +150,52 @@ public class Connection {
             e.printStackTrace();
         }
 
-        actualizarProducto(detalleAbastecimiento.getCantidad(), detalleAbastecimiento.getFolioProducto());
+        actualizarProducto(detalleAbastecimiento.getCantidad(), detalleAbastecimiento.getFolioProducto(), true);
 
     }
+
+    public void insertarVenta(Venta venta) {
+        String sentenciaSQL = "INSERT into venta VALUES(?,?,?,?,?)";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+
+            preparedStatement.setString(1, null);
+            preparedStatement.setString(2, venta.getIdDetalles());
+            preparedStatement.setString(3, venta.getIdEmpleado());
+            preparedStatement.setDouble(4, venta.getTotalAPagar());
+            preparedStatement.setDouble(5, venta.getTotalPagado());
+
+            int filasAfectadas = preparedStatement.executeUpdate();
+
+            System.out.println("Filas afectadas: " + filasAfectadas);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void insertarDetalleVenta(DetalleVenta detalleVenta) {
+        String sentenciaSQL = "INSERT into detalle_venta VALUES(?,?,?,?)";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+
+            preparedStatement.setString(1, null);
+            preparedStatement.setString(2, detalleVenta.getIdDetalles());
+            preparedStatement.setString(3, detalleVenta.getFolioProducto());
+            preparedStatement.setInt(4, detalleVenta.getCantidad());
+
+            int filasAfectadas = preparedStatement.executeUpdate();
+
+            System.out.println("Filas afectadas: " + filasAfectadas);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        actualizarProducto(detalleVenta.getCantidad(), detalleVenta.getFolioProducto(), false);
+    }
+
 
     // Métodos de actualización
 
@@ -344,7 +385,7 @@ public class Connection {
         return null;
     }
 
-    public void actualizarProducto(int cantidadNueva, String folioProducto) {
+    public void actualizarProducto(int cantidadNueva, String folioProducto, boolean aumento) {
         String sentenciaQuery   = "SELECT existencia FROM producto where folio_producto = '" + folioProducto + "'";
         int    cantidadAnterior = 0;
         int    cantidadTotal    = 0;
@@ -360,7 +401,11 @@ public class Connection {
             e.printStackTrace();
         }
 
-        cantidadTotal = cantidadAnterior + cantidadNueva;
+        if (aumento) {
+            cantidadTotal = cantidadAnterior + cantidadNueva;
+        } else {
+            cantidadTotal = cantidadAnterior - cantidadNueva;
+        }
 
         String sentenciaSQL = "UPDATE producto SET existencia = ? WHERE producto.folio_producto = ?";
 
@@ -379,6 +424,22 @@ public class Connection {
             e.printStackTrace();
         }
 
+    }
+
+    // Consultas
+
+    public void realizarConsulta(String SQLQuery){
+        JTable tablaConsultas = new JTable();
+        JScrollPane jScrollPane = new JScrollPane(tablaConsultas);
+
+        tablaConsultas.setModel(fillTable(SQLQuery));
+
+        Object[] elementosinterfaz = {
+                new JLabel("Resultado consulta"),
+                jScrollPane
+        };
+
+        JOptionPane.showMessageDialog(null, elementosinterfaz);
     }
 
     public DefaultTableModel fillTable(String sqlQuery) {

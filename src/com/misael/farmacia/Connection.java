@@ -16,12 +16,12 @@ import java.util.Vector;
 
 public class Connection {
 
-    public java.sql.Connection connection;
+    public java.sql.Connection db_connection;
 
     public void connect() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/farmacia?allowMultiQueries=true&user=root&password=");
+            db_connection = DriverManager.getConnection("jdbc:mysql://localhost/farmacia?allowMultiQueries=true&user=root&password=");
             System.out.println("Conexión realizada con la base de datos");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
@@ -32,10 +32,10 @@ public class Connection {
 
     public void disconnect() {
         try {
-            if (connection != null) {
-                connection.close();
+            if (db_connection != null) {
+                db_connection.close();
             }
-            connection = null;
+            db_connection = null;
             System.out.println("Desconectado correctamente");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -48,7 +48,7 @@ public class Connection {
         String sentenciaSQL = "INSERT empleado VALUES(?,?,?,?,?,?,?)";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
 
             preparedStatement.setString(1, empleado.getIdEmpleado());
             preparedStatement.setString(2, empleado.getNombre());
@@ -71,7 +71,7 @@ public class Connection {
         String sentenciaSQL = "INSERT proveedor VALUES(?,?,?,?,?,?)";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
 
             preparedStatement.setString(1, proveedor.getProveedorClave());
             preparedStatement.setString(2, proveedor.getNombre());
@@ -93,7 +93,7 @@ public class Connection {
         String sentenciaSQL = "INSERT producto VALUES(?,?,?,?,?)";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
 
             preparedStatement.setString(1, producto.getFolioProducto());
             preparedStatement.setString(2, producto.getDescripcion());
@@ -114,7 +114,7 @@ public class Connection {
         String sentenciaSQL = "INSERT into abastecimiento VALUES(?,?,?,?,?,?,?)";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
 
             preparedStatement.setString(1, null);
             preparedStatement.setTimestamp(2, abastecimiento.getFecha());
@@ -137,7 +137,7 @@ public class Connection {
         String sentenciaSQL = "INSERT into detalle_abastecimiento VALUES(?,?,?,?,?)";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
 
             preparedStatement.setString(1, null);
             preparedStatement.setString(2, detalleAbastecimiento.getIdListaProductos());
@@ -160,7 +160,7 @@ public class Connection {
         String sentenciaSQL = "INSERT into venta VALUES(?,?,?,?,?,?)";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
 
             preparedStatement.setString(1, null);
             preparedStatement.setTimestamp(2, venta.getFecha());
@@ -182,7 +182,7 @@ public class Connection {
         String sentenciaSQL = "INSERT into detalle_venta VALUES(?,?,?,?)";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
 
             preparedStatement.setString(1, null);
             preparedStatement.setString(2, detalleVenta.getIdDetalles());
@@ -232,7 +232,7 @@ public class Connection {
         String sentenciaSQL = "DELETE FROM empleado WHERE id_empleado=?";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
             preparedStatement.setString(1, idEmpleado);
             int filasAfectadas = preparedStatement.executeUpdate();
 
@@ -247,7 +247,7 @@ public class Connection {
         String sentenciaSQL = "DELETE FROM proveedor WHERE proveedor_clave=?";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
             preparedStatement.setString(1, proveedorClave);
             int filasAfectadas = preparedStatement.executeUpdate();
 
@@ -262,7 +262,7 @@ public class Connection {
         String sentenciaSQL = "DELETE FROM producto WHERE folio_producto=?";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
             preparedStatement.setString(1, folioProducto);
             int filasAfectadas = preparedStatement.executeUpdate();
 
@@ -278,10 +278,10 @@ public class Connection {
         String sentenciaSQLDetalleAbastecimiento = "DELETE FROM detalle_abastecimiento WHERE folio_abastecimiento=?";
 
         try {
-            connection.setAutoCommit(false);
+            db_connection.setAutoCommit(false);
 
-            PreparedStatement psAbastecimiento = connection.prepareStatement(sentenciaSQLAbastecimiento);
-            PreparedStatement psDetalles       = connection.prepareStatement(sentenciaSQLDetalleAbastecimiento);
+            PreparedStatement psAbastecimiento = db_connection.prepareStatement(sentenciaSQLAbastecimiento);
+            PreparedStatement psDetalles       = db_connection.prepareStatement(sentenciaSQLDetalleAbastecimiento);
 
             psAbastecimiento.setString(1, clave);
             psDetalles.setString(1, clave);
@@ -289,14 +289,14 @@ public class Connection {
             psAbastecimiento.executeUpdate();
             psDetalles.executeUpdate();
 
-            connection.commit();
-            connection.setAutoCommit(true);
+            db_connection.commit();
+            db_connection.setAutoCommit(true);
 
         } catch (SQLException e) {
             e.printStackTrace();
 
             try {
-                connection.rollback();
+                db_connection.rollback();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -312,7 +312,7 @@ public class Connection {
             int numeroColumnas = textFields.size();
 
             try {
-                PreparedStatement psUpdate = connection.prepareStatement(SQLUpdate);
+                PreparedStatement psUpdate = db_connection.prepareStatement(SQLUpdate);
 
                 for (int i = 1; i < textFields.size(); i++) {
                     psUpdate.setString(i, String.valueOf(textFields.get(i).getText()));
@@ -338,7 +338,7 @@ public class Connection {
         ArrayList<JTextField> textFields        = new ArrayList<>();
 
         try {
-            PreparedStatement psQuery = connection.prepareStatement(SQLQuery);
+            PreparedStatement psQuery = db_connection.prepareStatement(SQLQuery);
             psQuery.setString(1, llave);
             ResultSet resultSet = psQuery.executeQuery();
 
@@ -394,7 +394,7 @@ public class Connection {
         int    cantidadTotal    = 0;
 
         try {
-            Statement statement = connection.createStatement();
+            Statement statement = db_connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sentenciaQuery);
 
             while (resultSet.next()) {
@@ -413,7 +413,7 @@ public class Connection {
         String sentenciaSQL = "UPDATE producto SET existencia = ? WHERE producto.folio_producto = ?";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
             preparedStatement.setInt(1, cantidadTotal);
             preparedStatement.setString(2, folioProducto);
 
@@ -451,7 +451,7 @@ public class Connection {
         Vector<Object>         columnNames = new Vector<>();
 
         try {
-            Statement statement = connection.createStatement();
+            Statement statement = db_connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sqlQuery);
 
             columns = resultSet.getMetaData().getColumnCount();

@@ -14,6 +14,10 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -79,14 +83,16 @@ public class VentanaPrincipal extends JFrame {
     private JTextField  tfBusquedaProveedor;
     private JToolBar    trailing;
 
-    private Utilidades utilidades = new Utilidades();
+    private Utilidades utilidades;
 
-    private String[] columnasVenta           = {"Folio", "Fecha", "Descripción del producto", "Precio de venta", "Cantidad", "Importe", "Existencia"};
-    private String[] columnasProductos       = {"Folio", "Descripción del producto", "Clave Proveedor", "Nombre proveedor", "Precio", "Existencia"};
-    private String[] columnasEmpleados       = {"ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"};
-    private String[] columnasProvedores      = {"Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"};
-    private String[] columnasHistorialVentas = {"Folio Venta", "ID Detalles", "ID Empleado", "Importe", "Total pagado"};
-    private String[] columnasAbastecimientos = {"Clave", "Fecha", "Clave Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"};
+    private Connection connection;
+
+    private final String[] columnasVenta           = {"Folio", "Fecha", "Descripción del producto", "Precio de venta", "Cantidad", "Importe", "Existencia"};
+    private final String[] columnasProductos       = {"Folio", "Descripción del producto", "Clave Proveedor", "Nombre proveedor", "Precio", "Existencia"};
+    private final String[] columnasEmpleados       = {"ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"};
+    private final String[] columnasProvedores      = {"Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"};
+    private final String[] columnasHistorialVentas = {"Folio Venta", "ID Detalles", "ID Empleado", "Importe", "Total pagado"};
+    private final String[] columnasAbastecimientos = {"Clave", "Fecha", "Clave Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"};
 
 
     public void initActionListeners() {
@@ -106,15 +112,15 @@ public class VentanaPrincipal extends JFrame {
     public void configurarComponentes() {
         //Botón de salir en el tabbedPane
         trailing = new JToolBar();
-        trailing.setFloatable(false);
-        trailing.setBorder(null);
         btnSalir = new JButton("Salir");
         btnSalir.setIcon(iconoSalir);
+        trailing.setFloatable(false);
+        trailing.setBorder(null);
         trailing.add(Box.createHorizontalGlue());
         trailing.add(btnSalir);
         tabbedPane.putClientProperty(FlatClientProperties.TABBED_PANE_TRAILING_COMPONENT, trailing);
 
-        //Modelo default de la tabla de Ventas
+        //Modelo default de la tablas
         tableVenta.setModel(new DefaultTableModel(null, columnasVenta));
         tablaProductos.setModel(new DefaultTableModel(null, columnasProductos));
         tablaEmpleados.setModel(new DefaultTableModel(null, columnasEmpleados));
@@ -131,7 +137,50 @@ public class VentanaPrincipal extends JFrame {
         tabbedPane.setIconAt(5, iconoAbastecimientos);
     }
 
+    public DefaultTableModel fillTable(String sqlQuery) {
+        Vector<Vector<Object>> data        = new Vector<>();
+        int                    columns;
+        Vector<Object>         columnNames = new Vector<>();
+
+        try {
+            Statement statement = connection.db_connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sqlQuery);
+
+            columns = resultSet.getMetaData().getColumnCount();
+
+            for (int i = 1; i <= columns; i++) {
+                columnNames.add(resultSet.getMetaData().getColumnName(i));
+            }
+
+            while (resultSet.next()) {
+                Vector<Object> row = new Vector<>();
+
+                for (int i = 1; i <= columns; i++) {
+                    row.add(resultSet.getObject(i));
+                }
+
+                data.add(row);
+            }
+
+            resultSet.close();
+            statement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new DefaultTableModel(data, columnNames);
+
+    }
+
+    public void actualizarTablaProductos(){
+        String sqlQuery = "SELECT * FROM proveedores";
+        tablaProveedores.setModel(fillTable(sqlQuery));
+    }
+
     public VentanaPrincipal() {
+        utilidades = new Utilidades();
+        connection = new Connection();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1366, 728);
         setLocationRelativeTo(null);

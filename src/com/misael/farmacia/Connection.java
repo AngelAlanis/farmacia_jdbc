@@ -1,8 +1,10 @@
 package com.misael.farmacia;
 
-import com.mysql.cj.jdbc.exceptions.ConnectionFeatureNotAvailableException;
-
-import javax.swing.*;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -155,16 +157,17 @@ public class Connection {
     }
 
     public void insertarVenta(Venta venta) {
-        String sentenciaSQL = "INSERT into venta VALUES(?,?,?,?,?)";
+        String sentenciaSQL = "INSERT into venta VALUES(?,?,?,?,?,?)";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sentenciaSQL);
 
             preparedStatement.setString(1, null);
-            preparedStatement.setString(2, venta.getIdDetalles());
-            preparedStatement.setString(3, venta.getIdEmpleado());
-            preparedStatement.setDouble(4, venta.getTotalAPagar());
-            preparedStatement.setDouble(5, venta.getTotalPagado());
+            preparedStatement.setTimestamp(2, venta.getFecha());
+            preparedStatement.setString(3, venta.getIdDetalles());
+            preparedStatement.setString(4, venta.getIdEmpleado());
+            preparedStatement.setDouble(5, venta.getTotalAPagar());
+            preparedStatement.setDouble(6, venta.getTotalPagado());
 
             int filasAfectadas = preparedStatement.executeUpdate();
 
@@ -428,9 +431,9 @@ public class Connection {
 
     // Consultas
 
-    public void realizarConsulta(String SQLQuery){
-        JTable tablaConsultas = new JTable();
-        JScrollPane jScrollPane = new JScrollPane(tablaConsultas);
+    public void realizarConsulta(String SQLQuery) {
+        JTable      tablaConsultas = new JTable();
+        JScrollPane jScrollPane    = new JScrollPane(tablaConsultas);
 
         tablaConsultas.setModel(fillTable(SQLQuery));
 

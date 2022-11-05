@@ -1,11 +1,22 @@
 package com.misael.farmacia;
 
+import java.sql.Timestamp;
+
 public class Venta {
 
+    private Timestamp fecha;
     private String idDetalles;
     private String idEmpleado;
     private Double totalAPagar;
     private Double totalPagado;
+
+    public Timestamp getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Timestamp fecha) {
+        this.fecha = fecha;
+    }
 
     public String getIdDetalles() {
         return idDetalles;
@@ -42,7 +53,8 @@ public class Venta {
     public Venta() {
     }
 
-    public Venta(String idDetalles, String idEmpleado, Double totalAPagar, Double totalPagado) {
+    public Venta(Timestamp fecha, String idDetalles, String idEmpleado, Double totalAPagar, Double totalPagado) {
+        this.fecha       = fecha;
         this.idDetalles  = idDetalles;
         this.idEmpleado  = idEmpleado;
         this.totalAPagar = totalAPagar;

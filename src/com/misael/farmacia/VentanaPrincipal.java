@@ -11,47 +11,82 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 
 public class VentanaPrincipal extends JFrame {
-    private JPanel      panelPrincipal;
-    private JPanel      panelEncabezado;
-    private JTabbedPane tabbedPane;
-    private JPanel      panelPie;
-    private JPanel      panelVenta;
-    private JPanel      panelInventario;
-    private JPanel      panelHistorialVentas;
-    private JPanel      panelProveedores;
-    private JPanel      panelAbastecimientos;
-    private JLabel      iconoLogo;
-    private JPanel      panelUsuario;
-    private JLabel      labelLeAtiende;
-    private JButton     btnUsuario;
-    private JButton     btnBuscar;
-    private JButton     btnEliminar;
-    private JButton     btnCobrar;
-    private JLabel      labelCantidadProductos;
-    private JLabel      labelCostoTotal;
-    private JTable      tableVenta;
-    private JScrollPane spVenta;
-    private JTable      tablaInventario;
-    private JScrollPane spInventario;
-    private JTable      tablaProveedores;
-    private JScrollPane spProveedores;
-    private JTable      tablaHistorialVentas;
-    private JScrollPane spHistorialVentas;
-    private JTable      tablaAbastecimientos;
-    private JScrollPane spAbastecimientos;
-    private JToolBar    trailing;
-    private JButton     btnSalir;
-    private ImageIcon   iconoSalir;
-    private ImageIcon   iconoVenta;
+
+    private ImageIcon   iconoAbastecimientos;
+    private ImageIcon   iconoEmpleado;
+    private ImageIcon   iconoHistorialVentas;
     private ImageIcon   iconoInventario;
     private ImageIcon   iconoProveedores;
-    private ImageIcon   iconoHistorialVentas;
-    private ImageIcon   iconoAbastecimientos;
-    private Utilidades  utilidades = new Utilidades();
+    private ImageIcon   iconoSalir;
+    private ImageIcon   iconoVenta;
+    private JButton     btnAgregarAbastecimiento;
+    private JButton     btnAgregarEmpleado;
+    private JButton     btnAgregarProducto;
+    private JButton     btnAgregarProveedor;
+    private JButton     btnBuscar;
+    private JButton     btnCobrar;
+    private JButton     btnEliminar;
+    private JButton     btnEliminarEmpleado;
+    private JButton     btnEliminarProducto;
+    private JButton     btnEliminarProveedor;
+    private JButton     btnModificarEmpleado;
+    private JButton     btnModificarProducto;
+    private JButton     btnModificarProveedor;
+    private JButton     btnSalir;
+    private JButton     btnUsuario;
+    private JLabel      iconoLogo;
+    private JLabel      labelBuscarProducto;
+    private JLabel      labelBuscarProveedor;
+    private JLabel      labelBusquedaAbastecimiento;
+    private JLabel      labelBusquedaEmpleado;
+    private JLabel      labelCantidadProductos;
+    private JLabel      labelCostoTotal;
+    private JLabel      labelLeAtiende;
+    private JPanel      panelAbastecimientos;
+    private JPanel      panelEmpleados;
+    private JPanel      panelEncabezado;
+    private JPanel      panelHistorialVentas;
+    private JPanel      panelPieEmpleados;
+    private JPanel      panelPieProductos;
+    private JPanel      panelPieProveedores;
+    private JPanel      panelPieVenta;
+    private JPanel      panelPrincipal;
+    private JPanel      panelProductos;
+    private JPanel      panelProveedores;
+    private JPanel      panelUsuario;
+    private JPanel      panelVenta;
+    private JScrollPane spAbastecimientos;
+    private JScrollPane spEmpleados;
+    private JScrollPane spHistorialVentas;
+    private JScrollPane spProductos;
+    private JScrollPane spProveedores;
+    private JScrollPane spVenta;
+    private JTabbedPane tabbedPane;
+    private JTable      tablaAbastecimientos;
+    private JTable      tablaEmpleados;
+    private JTable      tablaHistorialVentas;
+    private JTable      tablaProductos;
+    private JTable      tablaProveedores;
+    private JTable      tableVenta;
+    private JTextField  tfBusquedaAbastecimiento;
+    private JTextField  tfBusquedaEmpleado;
+    private JTextField  tfBusquedaProducto;
+    private JTextField  tfBusquedaProveedor;
+    private JToolBar    trailing;
+
+    private Utilidades utilidades = new Utilidades();
+
+    private String[] columnasVenta           = {"Folio", "Fecha", "Descripción del producto", "Precio de venta", "Cantidad", "Importe", "Existencia"};
+    private String[] columnasProductos       = {"Folio", "Descripción del producto", "Clave Proveedor", "Nombre proveedor", "Precio", "Existencia"};
+    private String[] columnasEmpleados       = {"ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"};
+    private String[] columnasProvedores      = {"Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"};
+    private String[] columnasHistorialVentas = {"Folio Venta", "ID Detalles", "ID Empleado", "Importe", "Total pagado"};
+    private String[] columnasAbastecimientos = {"Clave", "Fecha", "Clave Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"};
 
 
     public void initActionListeners() {
@@ -63,6 +98,7 @@ public class VentanaPrincipal extends JFrame {
         iconoVenta           = utilidades.imageIcon("/icons/ventas.png");
         iconoInventario      = utilidades.imageIcon("/icons/inventario.png");
         iconoProveedores     = utilidades.imageIcon("/icons/proveedor.png");
+        iconoEmpleado        = utilidades.imageIcon("/icons/empleados.png");
         iconoHistorialVentas = utilidades.imageIcon("/icons/registro.png");
         iconoAbastecimientos = utilidades.imageIcon("/icons/abastecimiento.png");
     }
@@ -79,15 +115,20 @@ public class VentanaPrincipal extends JFrame {
         tabbedPane.putClientProperty(FlatClientProperties.TABBED_PANE_TRAILING_COMPONENT, trailing);
 
         //Modelo default de la tabla de Ventas
-        String[] columnasVenta = {"Folio", "Descripción del producto", "Precio de venta", "Cantidad", "Importe", "Existencia"};
         tableVenta.setModel(new DefaultTableModel(null, columnasVenta));
+        tablaProductos.setModel(new DefaultTableModel(null, columnasProductos));
+        tablaEmpleados.setModel(new DefaultTableModel(null, columnasEmpleados));
+        tablaProveedores.setModel(new DefaultTableModel(null, columnasProvedores));
+        tablaHistorialVentas.setModel(new DefaultTableModel(null, columnasHistorialVentas));
+        tablaAbastecimientos.setModel(new DefaultTableModel(null, columnasAbastecimientos));
 
         //Iconos de las pestañas del tabbedPane
         tabbedPane.setIconAt(0, iconoVenta);
         tabbedPane.setIconAt(1, iconoInventario);
-        tabbedPane.setIconAt(2, iconoProveedores);
-        tabbedPane.setIconAt(3, iconoHistorialVentas);
-        tabbedPane.setIconAt(4, iconoAbastecimientos);
+        tabbedPane.setIconAt(2, iconoEmpleado);
+        tabbedPane.setIconAt(3, iconoProveedores);
+        tabbedPane.setIconAt(4, iconoHistorialVentas);
+        tabbedPane.setIconAt(5, iconoAbastecimientos);
     }
 
     public VentanaPrincipal() {

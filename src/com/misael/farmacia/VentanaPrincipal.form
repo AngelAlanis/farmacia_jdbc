@@ -73,7 +73,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="3de7e" binding="panelVenta" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="3de7e" binding="panelVenta" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <tabbedpane title="Venta"/>
@@ -94,32 +94,252 @@
                   </component>
                 </children>
               </scrollpane>
+              <grid id="9c158" binding="panelPieVenta" layout-manager="GridLayoutManager" row-count="1" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="10" left="10" bottom="10" right="10"/>
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="etched"/>
+                <children>
+                  <component id="695c2" class="javax.swing.JButton" binding="btnBuscar">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/buscar.png"/>
+                      <text value="Buscar"/>
+                    </properties>
+                  </component>
+                  <component id="2ca1a" class="javax.swing.JButton" binding="btnEliminar">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/eliminar.png"/>
+                      <text value="Eliminar"/>
+                    </properties>
+                  </component>
+                  <component id="5375" class="javax.swing.JLabel" binding="labelCantidadProductos">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <font size="18" style="2"/>
+                      <text value="0 productos en la venta actual"/>
+                    </properties>
+                  </component>
+                  <component id="6ef7c" class="javax.swing.JButton" binding="btnCobrar">
+                    <constraints>
+                      <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/cobrar.png"/>
+                      <text value="Cobrar"/>
+                    </properties>
+                  </component>
+                  <component id="6ca44" class="javax.swing.JLabel" binding="labelCostoTotal">
+                    <constraints>
+                      <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <font size="28" style="1"/>
+                      <foreground color="-16739363"/>
+                      <text value="$0"/>
+                    </properties>
+                  </component>
+                  <hspacer id="e9fef">
+                    <constraints>
+                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </hspacer>
+                </children>
+              </grid>
             </children>
           </grid>
-          <grid id="7bc1e" binding="panelInventario" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="7bc1e" binding="panelProductos" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <tabbedpane title="Inventario"/>
+              <tabbedpane title="Productos"/>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <scrollpane id="af44c" binding="spInventario">
+              <scrollpane id="af44c" binding="spProductos">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="e5ac" class="javax.swing.JTable" binding="tablaInventario">
+                  <component id="e5ac" class="javax.swing.JTable" binding="tablaProductos">
                     <constraints/>
                     <properties/>
                   </component>
                 </children>
               </scrollpane>
+              <grid id="8a76e" binding="panelPieProductos" layout-manager="GridLayoutManager" row-count="1" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="10" left="10" bottom="10" right="10"/>
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="etched"/>
+                <children>
+                  <component id="e891b" class="javax.swing.JButton" binding="btnAgregarProducto">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/agregar.png"/>
+                      <text value="Agregar"/>
+                    </properties>
+                  </component>
+                  <component id="ae7d8" class="javax.swing.JButton" binding="btnModificarProducto">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/modificar.png"/>
+                      <text value="Modificar"/>
+                    </properties>
+                  </component>
+                  <hspacer id="85851">
+                    <constraints>
+                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </hspacer>
+                  <component id="cdd69" class="javax.swing.JButton" binding="btnEliminarProducto">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/eliminar.png"/>
+                      <text value="Eliminar"/>
+                    </properties>
+                  </component>
+                  <component id="d8746" class="javax.swing.JTextField" binding="tfBusquedaProducto">
+                    <constraints>
+                      <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="100" height="45"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="86f01" class="javax.swing.JLabel" binding="labelBuscarProducto">
+                    <constraints>
+                      <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/buscar.png"/>
+                      <text value="Buscar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
             </children>
           </grid>
-          <grid id="dee" binding="panelProveedores" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="bde4e" binding="panelEmpleados" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <tabbedpane title="Empleados"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <scrollpane id="919d" binding="spEmpleados">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="83abd" class="javax.swing.JTable" binding="tablaEmpleados">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
+              <grid id="4ac81" binding="panelPieEmpleados" layout-manager="GridLayoutManager" row-count="1" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="10" left="10" bottom="10" right="10"/>
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="etched"/>
+                <children>
+                  <component id="ec0a0" class="javax.swing.JButton" binding="btnAgregarEmpleado">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/agregar.png"/>
+                      <text value="Agregar"/>
+                    </properties>
+                  </component>
+                  <component id="482fa" class="javax.swing.JButton" binding="btnModificarEmpleado">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/modificar.png"/>
+                      <text value="Modificar"/>
+                    </properties>
+                  </component>
+                  <hspacer id="fb37f">
+                    <constraints>
+                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </hspacer>
+                  <component id="4c1b0" class="javax.swing.JButton" binding="btnEliminarEmpleado">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/eliminar.png"/>
+                      <text value="Eliminar"/>
+                    </properties>
+                  </component>
+                  <component id="9b424" class="javax.swing.JTextField" binding="tfBusquedaEmpleado">
+                    <constraints>
+                      <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="100" height="45"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="be49e" class="javax.swing.JLabel" binding="labelBusquedaEmpleado">
+                    <constraints>
+                      <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/buscar.png"/>
+                      <text value="Buscar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <grid id="dee" binding="panelProveedores" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <tabbedpane title="Proveedores"/>
@@ -140,6 +360,71 @@
                   </component>
                 </children>
               </scrollpane>
+              <grid id="eacd" binding="panelPieProveedores" layout-manager="GridLayoutManager" row-count="1" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="10" left="10" bottom="10" right="10"/>
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="etched"/>
+                <children>
+                  <component id="191ba" class="javax.swing.JButton" binding="btnAgregarProveedor">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/agregar.png"/>
+                      <text value="Agregar"/>
+                    </properties>
+                  </component>
+                  <component id="ea4e6" class="javax.swing.JButton" binding="btnModificarProveedor">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/modificar.png"/>
+                      <text value="Modificar"/>
+                    </properties>
+                  </component>
+                  <hspacer id="972ce">
+                    <constraints>
+                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </hspacer>
+                  <component id="b4537" class="javax.swing.JButton" binding="btnEliminarProveedor">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/eliminar.png"/>
+                      <text value="Eliminar"/>
+                    </properties>
+                  </component>
+                  <component id="98f6b" class="javax.swing.JTextField" binding="tfBusquedaProveedor">
+                    <constraints>
+                      <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="100" height="45"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="48960" class="javax.swing.JLabel" binding="labelBuscarProveedor">
+                    <constraints>
+                      <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/buscar.png"/>
+                      <text value="Buscar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
             </children>
           </grid>
           <grid id="c8f73" binding="panelHistorialVentas" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -165,7 +450,7 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="cc437" binding="panelAbastecimientos" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="cc437" binding="panelAbastecimientos" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <tabbedpane title="Abastecimientos"/>
@@ -186,78 +471,53 @@
                   </component>
                 </children>
               </scrollpane>
+              <grid id="9a4be" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="10" left="10" bottom="10" right="10"/>
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="etched"/>
+                <children>
+                  <component id="4c19b" class="javax.swing.JButton" binding="btnAgregarAbastecimiento">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false">
+                        <preferred-size width="140" height="90"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/agregar.png"/>
+                      <text value="Agregar"/>
+                    </properties>
+                  </component>
+                  <hspacer id="58d">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </hspacer>
+                  <component id="5905d" class="javax.swing.JTextField" binding="tfBusquedaAbastecimiento">
+                    <constraints>
+                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="100" height="45"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="57a38" class="javax.swing.JLabel" binding="labelBusquedaAbastecimiento">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <icon value="icons/buscar.png"/>
+                      <text value="Buscar"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
             </children>
           </grid>
         </children>
       </tabbedpane>
-      <grid id="9c158" binding="panelPie" layout-manager="GridLayoutManager" row-count="1" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="10" left="10" bottom="10" right="10"/>
-        <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="1.0" weighty="0.05"/>
-        </constraints>
-        <properties/>
-        <border type="etched"/>
-        <children>
-          <component id="695c2" class="javax.swing.JButton" binding="btnBuscar">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false">
-                <preferred-size width="140" height="90"/>
-              </grid>
-            </constraints>
-            <properties>
-              <icon value="icons/buscar.png"/>
-              <text value="Buscar"/>
-            </properties>
-          </component>
-          <component id="2ca1a" class="javax.swing.JButton" binding="btnEliminar">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="140" height="90"/>
-              </grid>
-            </constraints>
-            <properties>
-              <icon value="icons/eliminar.png"/>
-              <text value="Eliminar"/>
-            </properties>
-          </component>
-          <component id="5375" class="javax.swing.JLabel" binding="labelCantidadProductos">
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <font size="18" style="2"/>
-              <text value="0 productos en la venta actual"/>
-            </properties>
-          </component>
-          <component id="6ef7c" class="javax.swing.JButton" binding="btnCobrar">
-            <constraints>
-              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="140" height="90"/>
-              </grid>
-            </constraints>
-            <properties>
-              <icon value="icons/cobrar.png"/>
-              <text value="Cobrar"/>
-            </properties>
-          </component>
-          <component id="6ca44" class="javax.swing.JLabel" binding="labelCostoTotal">
-            <constraints>
-              <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <font size="28" style="1"/>
-              <foreground color="-16739363"/>
-              <text value="$0"/>
-            </properties>
-          </component>
-          <hspacer id="e9fef">
-            <constraints>
-              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-        </children>
-      </grid>
     </children>
   </grid>
 </form>

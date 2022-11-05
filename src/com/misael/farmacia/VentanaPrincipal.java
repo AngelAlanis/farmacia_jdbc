@@ -82,12 +82,12 @@ public class VentanaPrincipal extends JFrame {
     private JTextField  tfBusquedaEmpleado;
     private JTextField  tfBusquedaProducto;
     private JTextField  tfBusquedaProveedor;
-    private JButton btnDetallesAbastecimiento;
-    private JPanel panelPieAbastecimientos;
-    private JTextField tfBusquedaHistorialVentas;
-    private JLabel     labelBusquedaHistorialVentas;
-    private JButton btnDetallesHistorialVentas;
-    private JToolBar   trailing;
+    private JButton     btnDetallesAbastecimiento;
+    private JPanel      panelPieAbastecimientos;
+    private JTextField  tfBusquedaHistorialVentas;
+    private JLabel      labelBusquedaHistorialVentas;
+    private JButton     btnDetallesHistorialVentas;
+    private JToolBar    trailing;
 
     private Utilidades utilidades;
 
@@ -175,10 +175,11 @@ public class VentanaPrincipal extends JFrame {
     }
 
     public void actualizarTablaProductos() {
-        String sqlQuery =
-                "SELECT producto.folio_producto, producto.descripcion, producto.id_proveedor, proveedor.nombre, producto.precio, producto.existencia\n" +
-                        "FROM producto, proveedor\n" +
-                        "WHERE producto.id_proveedor = proveedor.proveedor_clave;";
+        String sqlQuery = """
+                SELECT producto.folio_producto, producto.descripcion, producto.id_proveedor, proveedor.nombre, producto.precio, producto.existencia
+                FROM producto, proveedor
+                WHERE producto.id_proveedor = proveedor.proveedor_clave;
+                """;
         Vector<Vector<Object>> data = obtenerDatosTabla(sqlQuery);
         tablaProductos.setModel(new DefaultTableModel(data, columnasProductos));
     }
@@ -196,17 +197,21 @@ public class VentanaPrincipal extends JFrame {
     }
 
     public void actualizarTablaHistorialVentas() {
-        String sqlQuery = "SELECT venta.folio_venta, venta.fecha, venta.id_detalles, venta.id_empleado, empleado.nombre, venta.total_a_pagar, venta.total_pagado\n" +
-                "FROM venta, empleado\n" +
-                "WHERE venta.id_empleado = empleado.id_empleado;";
+        String sqlQuery = """ 
+                SELECT venta.folio_venta, venta.fecha, venta.id_detalles, venta.id_empleado, empleado.nombre, venta.total_a_pagar, venta.total_pagado
+                FROM venta, empleado
+                WHERE venta.id_empleado = empleado.id_empleado;
+                """;
         Vector<Vector<Object>> data = obtenerDatosTabla(sqlQuery);
         tablaHistorialVentas.setModel(new DefaultTableModel(data, columnasHistorialVentas));
     }
 
     public void actualizarTablaAbastecimientos() {
-        String sqlQuery = "SELECT abastecimiento.clave, abastecimiento.fecha, abastecimiento.clave_proveedor, proveedor.nombre, abastecimiento.id_detalles, abastecimiento.importe_pagado, abastecimiento.total_a_pagar, abastecimiento.pago_restante\n" +
-                "FROM abastecimiento, proveedor\n" +
-                "WHERE abastecimiento.clave_proveedor = proveedor.proveedor_clave;";
+        String sqlQuery = """
+                SELECT abastecimiento.clave, abastecimiento.fecha, abastecimiento.clave_proveedor, proveedor.nombre, abastecimiento.id_detalles, abastecimiento.importe_pagado, abastecimiento.total_a_pagar, abastecimiento.pago_restante
+                FROM abastecimiento, proveedor
+                WHERE abastecimiento.clave_proveedor = proveedor.proveedor_clave;
+                """;
         Vector<Vector<Object>> data = obtenerDatosTabla(sqlQuery);
         tablaAbastecimientos.setModel(new DefaultTableModel(data, columnasAbastecimientos));
     }

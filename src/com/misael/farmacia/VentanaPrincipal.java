@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class VentanaPrincipal extends JFrame {
@@ -87,12 +88,12 @@ public class VentanaPrincipal extends JFrame {
 
     private Connection connection;
 
-    private final String[] columnasVenta           = {"Folio", "Fecha", "Descripción del producto", "Precio de venta", "Cantidad", "Importe", "Existencia"};
-    private final String[] columnasProductos       = {"Folio", "Descripción del producto", "Clave Proveedor", "Nombre proveedor", "Precio", "Existencia"};
-    private final String[] columnasEmpleados       = {"ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"};
-    private final String[] columnasProvedores      = {"Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"};
-    private final String[] columnasHistorialVentas = {"Folio Venta", "ID Detalles", "ID Empleado", "Importe", "Total pagado"};
-    private final String[] columnasAbastecimientos = {"Clave", "Fecha", "Clave Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"};
+    private final Vector<String> columnasProductos       = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Clave Proveedor", "Nombre proveedor", "Precio", "Existencia"));
+    private final Vector<String> columnasVenta           = new Vector<>(Arrays.asList("Folio", "Fecha", "Descripción del producto", "Precio de venta", "Cantidad", "Importe", "Existencia"));
+    private final Vector<String> columnasEmpleados       = new Vector<>(Arrays.asList("ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"));
+    private final Vector<String> columnasProvedores      = new Vector<>(Arrays.asList("Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"));
+    private final Vector<String> columnasHistorialVentas = new Vector<>(Arrays.asList("Folio Venta", "Fecha", "ID Detalles", "ID Empleado", "Nombre empleado", "Importe", "Total pagado"));
+    private final Vector<String> columnasAbastecimientos = new Vector<>(Arrays.asList("Clave", "Fecha", "Clave Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"));
 
 
     public void initActionListeners() {
@@ -122,11 +123,11 @@ public class VentanaPrincipal extends JFrame {
 
         //Modelo default de la tablas
         tableVenta.setModel(new DefaultTableModel(null, columnasVenta));
-        tablaProductos.setModel(new DefaultTableModel(null, columnasProductos));
-        tablaEmpleados.setModel(new DefaultTableModel(null, columnasEmpleados));
-        tablaProveedores.setModel(new DefaultTableModel(null, columnasProvedores));
-        tablaHistorialVentas.setModel(new DefaultTableModel(null, columnasHistorialVentas));
-        tablaAbastecimientos.setModel(new DefaultTableModel(null, columnasAbastecimientos));
+        actualizarTablaProductos();
+        actualizarTablaEmpleados();
+        actualizarTablaProveedores();
+        actualizarTablaHistorialVentas();
+        actualizarTablaAbastecimientos();
 
         //Iconos de las pestañas del tabbedPane
         tabbedPane.setIconAt(0, iconoVenta);
@@ -137,20 +138,15 @@ public class VentanaPrincipal extends JFrame {
         tabbedPane.setIconAt(5, iconoAbastecimientos);
     }
 
-    public DefaultTableModel fillTable(String sqlQuery) {
-        Vector<Vector<Object>> data        = new Vector<>();
+    public Vector<Vector<Object>> obtenerDatosTabla(String sqlQuery) {
+        Vector<Vector<Object>> data = new Vector<>();
         int                    columns;
-        Vector<Object>         columnNames = new Vector<>();
 
         try {
             Statement statement = connection.db_connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sqlQuery);
 
             columns = resultSet.getMetaData().getColumnCount();
-
-            for (int i = 1; i <= columns; i++) {
-                columnNames.add(resultSet.getMetaData().getColumnName(i));
-            }
 
             while (resultSet.next()) {
                 Vector<Object> row = new Vector<>();
@@ -169,13 +165,45 @@ public class VentanaPrincipal extends JFrame {
             e.printStackTrace();
         }
 
-        return new DefaultTableModel(data, columnNames);
+        return data;
 
     }
 
-    public void actualizarTablaProductos(){
-        String sqlQuery = "SELECT * FROM proveedores";
-        tablaProveedores.setModel(fillTable(sqlQuery));
+    public void actualizarTablaProductos() {
+        String sqlQuery =
+                "SELECT producto.folio_producto, producto.descripcion, producto.id_proveedor, proveedor.nombre, producto.precio, producto.existencia\n" +
+                        "FROM producto, proveedor\n" +
+                        "WHERE producto.id_proveedor = proveedor.proveedor_clave;";
+        Vector<Vector<Object>> data = obtenerDatosTabla(sqlQuery);
+        tablaProductos.setModel(new DefaultTableModel(data, columnasProductos));
+    }
+
+    public void actualizarTablaEmpleados() {
+        String                 sqlQuery = "SELECT * FROM empleado";
+        Vector<Vector<Object>> data     = obtenerDatosTabla(sqlQuery);
+        tablaEmpleados.setModel(new DefaultTableModel(data, columnasEmpleados));
+    }
+
+    public void actualizarTablaProveedores() {
+        String                 sqlQuery = "SELECT * FROM proveedor";
+        Vector<Vector<Object>> data     = obtenerDatosTabla(sqlQuery);
+        tablaProveedores.setModel(new DefaultTableModel(data, columnasProvedores));
+    }
+
+    public void actualizarTablaHistorialVentas() {
+        String sqlQuery = "SELECT venta.folio_venta, venta.fecha, venta.id_detalles, venta.id_empleado, empleado.nombre, venta.total_a_pagar, venta.total_pagado\n" +
+                "FROM venta, empleado\n" +
+                "WHERE venta.id_empleado = empleado.id_empleado;";
+        Vector<Vector<Object>> data = obtenerDatosTabla(sqlQuery);
+        tablaHistorialVentas.setModel(new DefaultTableModel(data, columnasHistorialVentas));
+    }
+
+    public void actualizarTablaAbastecimientos() {
+        String sqlQuery = "SELECT abastecimiento.clave, abastecimiento.fecha, abastecimiento.clave_proveedor, proveedor.nombre, abastecimiento.importe_pagado, abastecimiento.total_a_pagar, abastecimiento.pago_restante\n" +
+                "FROM abastecimiento, proveedor\n" +
+                "WHERE abastecimiento.clave_proveedor = proveedor.proveedor_clave;";
+        Vector<Vector<Object>> data = obtenerDatosTabla(sqlQuery);
+        tablaAbastecimientos.setModel(new DefaultTableModel(data, columnasHistorialVentas));
     }
 
     public VentanaPrincipal() {

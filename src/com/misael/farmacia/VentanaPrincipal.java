@@ -82,7 +82,12 @@ public class VentanaPrincipal extends JFrame {
     private JTextField  tfBusquedaEmpleado;
     private JTextField  tfBusquedaProducto;
     private JTextField  tfBusquedaProveedor;
-    private JToolBar    trailing;
+    private JButton btnDetallesAbastecimiento;
+    private JPanel panelPieAbastecimientos;
+    private JTextField tfBusquedaHistorialVentas;
+    private JLabel     labelBusquedaHistorialVentas;
+    private JButton btnDetallesHistorialVentas;
+    private JToolBar   trailing;
 
     private Utilidades utilidades;
 

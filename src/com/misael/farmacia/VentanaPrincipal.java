@@ -6,6 +6,7 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
@@ -20,9 +21,19 @@ public class VentanaPrincipal extends JFrame {
     private JPanel      panelHistorialVentas;
     private JPanel      panelProveedores;
     private JPanel      panelAbastecimientos;
-    private JToolBar    trailing;
+    private JLabel      iconoLogo;
+    private JPanel      panelUsuario;
+    private JLabel      labelLeAtiende;
+    private JButton btnUsuario;
+    private JButton btnBuscar;
+    private JButton btnEliminar;
+    private JButton btnCobrar;
+    private JLabel  labelCantidadProductos;
+    private JLabel labelCostoTotal;
+    private JToolBar trailing;
     private JButton     btnSalir;
     private ImageIcon   iconoSalir;
+    private ImageIcon   imagenLogo;
     private Utilidades  utilidades = new Utilidades();
 
 
@@ -32,6 +43,7 @@ public class VentanaPrincipal extends JFrame {
 
     public void inicializarIconos() {
         iconoSalir = utilidades.imageIcon("/icons/salir.png");
+        imagenLogo = utilidades.imageIcon("/logoFarmacia.png");
     }
 
     public void configurarComponentes() {
@@ -43,6 +55,8 @@ public class VentanaPrincipal extends JFrame {
         trailing.add(Box.createHorizontalGlue());
         trailing.add(btnSalir);
         tabbedPane.putClientProperty(FlatClientProperties.TABBED_PANE_TRAILING_COMPONENT, trailing);
+
+        iconoLogo.setIcon(imagenLogo);
     }
 
     public VentanaPrincipal() {

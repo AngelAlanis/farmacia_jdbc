@@ -93,7 +93,7 @@ public class VentanaPrincipal extends JFrame {
     private final Vector<String> columnasEmpleados       = new Vector<>(Arrays.asList("ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"));
     private final Vector<String> columnasProvedores      = new Vector<>(Arrays.asList("Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"));
     private final Vector<String> columnasHistorialVentas = new Vector<>(Arrays.asList("Folio Venta", "Fecha", "ID Detalles", "ID Empleado", "Nombre empleado", "Importe", "Total pagado"));
-    private final Vector<String> columnasAbastecimientos = new Vector<>(Arrays.asList("Clave", "Fecha", "Clave Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"));
+    private final Vector<String> columnasAbastecimientos = new Vector<>(Arrays.asList("Clave", "Fecha", "Clave Proveedor", "Nombre Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"));
 
 
     public void initActionListeners() {
@@ -199,11 +199,11 @@ public class VentanaPrincipal extends JFrame {
     }
 
     public void actualizarTablaAbastecimientos() {
-        String sqlQuery = "SELECT abastecimiento.clave, abastecimiento.fecha, abastecimiento.clave_proveedor, proveedor.nombre, abastecimiento.importe_pagado, abastecimiento.total_a_pagar, abastecimiento.pago_restante\n" +
+        String sqlQuery = "SELECT abastecimiento.clave, abastecimiento.fecha, abastecimiento.clave_proveedor, proveedor.nombre, abastecimiento.id_detalles, abastecimiento.importe_pagado, abastecimiento.total_a_pagar, abastecimiento.pago_restante\n" +
                 "FROM abastecimiento, proveedor\n" +
                 "WHERE abastecimiento.clave_proveedor = proveedor.proveedor_clave;";
         Vector<Vector<Object>> data = obtenerDatosTabla(sqlQuery);
-        tablaAbastecimientos.setModel(new DefaultTableModel(data, columnasHistorialVentas));
+        tablaAbastecimientos.setModel(new DefaultTableModel(data, columnasAbastecimientos));
     }
 
     public VentanaPrincipal() {

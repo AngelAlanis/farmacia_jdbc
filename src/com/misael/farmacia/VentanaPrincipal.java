@@ -15,10 +15,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.Vector;
+import java.util.*;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -235,19 +232,10 @@ public class VentanaPrincipal extends JFrame {
             JTextField        tfIdEmpleado = new JTextField();
             JTextField        tfNombre     = new JTextField();
             JComboBox<String> cbGenero     = new JComboBox(generos);
-
-            SqlDateModel dateModel  = new SqlDateModel();
-            Properties   properties = new Properties();
-            properties.put("text.today", "Today");
-            properties.put("text.month", "Month");
-            properties.put("text.year", "Year");
-            JDatePanelImpl  datePanel  = new JDatePanelImpl(dateModel, properties);
-            JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-
-            JTextField tfDomicilio = new JTextField();
-            JTextField tfTelefono  = new JTextField();
-            JTextField tfCorreo    = new JTextField();
-
+            JDatePickerImpl   datePicker   = generarCalendario();
+            JTextField        tfDomicilio  = new JTextField();
+            JTextField        tfTelefono   = new JTextField();
+            JTextField        tfCorreo     = new JTextField();
 
             Object[] interfaz = {
                     new JLabel("Agregar empleado"),
@@ -284,6 +272,76 @@ public class VentanaPrincipal extends JFrame {
 
                     connection.insertarEmpleado(empleado);
                     JOptionPane.showMessageDialog(null, "Empleado agregado correctamente");
+                    actualizarTablaEmpleados();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Verifique los datos ingresados", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        btnModificarEmpleado.addActionListener(e -> {
+            String[] generos     = {"- - Seleccione un género - -", "Masculino", "Femenino"};
+            Empleado empleado    = new Empleado();
+            int      selectedRow = tablaEmpleados.getSelectedRow();
+
+            empleado.setIdEmpleado(String.valueOf(tablaEmpleados.getValueAt(selectedRow, 0)));
+            empleado.setNombre(String.valueOf(tablaEmpleados.getValueAt(selectedRow, 1)));
+            empleado.setGenero(String.valueOf(tablaEmpleados.getValueAt(selectedRow, 2)));
+            empleado.setFechaNacimiento((Date) tablaEmpleados.getValueAt(selectedRow, 3));
+            empleado.setDomicilio(String.valueOf(tablaEmpleados.getValueAt(selectedRow, 4)));
+            empleado.setTelefono(String.valueOf(tablaEmpleados.getValueAt(selectedRow, 5)));
+            empleado.setCorreo(String.valueOf(tablaEmpleados.getValueAt(selectedRow, 6)));
+
+            JTextField        tfIdEmpleado = new JTextField(empleado.getIdEmpleado());
+            JTextField        tfNombre     = new JTextField(empleado.getNombre());
+            JComboBox<String> cbGenero     = new JComboBox(generos);
+            JTextField        tfDomicilio  = new JTextField(empleado.getDomicilio());
+            JTextField        tfTelefono   = new JTextField(empleado.getTelefono());
+            JTextField        tfCorreo     = new JTextField(empleado.getCorreo());
+            JDatePickerImpl   datePicker   = generarCalendario();
+
+            String[] date = empleado.getFechaNacimiento().toString().split("-");
+
+            datePicker.getModel().setDate(Integer.parseInt(date[0]), Integer.parseInt(date[1]) - 1, Integer.parseInt(date[2]));
+            datePicker.getModel().setSelected(true);
+
+            tfIdEmpleado.setEnabled(false);
+            cbGenero.setSelectedItem(empleado.getGenero());
+
+            Object[] interfaz = {
+                    new JLabel("Agregar empleado"),
+                    new JLabel("ID Empleado"),
+                    tfIdEmpleado,
+                    new JLabel("Nombre"),
+                    tfNombre,
+                    new JLabel("Género"),
+                    cbGenero,
+                    new JLabel("Fecha de nacimiento"),
+                    datePicker,
+                    new JLabel("Domicilio"),
+                    tfDomicilio,
+                    new JLabel("Teléfono"),
+                    tfTelefono,
+                    new JLabel("Correo electrónico"),
+                    tfCorreo
+            };
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Modificar empleado", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            if (confirmacion == JOptionPane.OK_OPTION) {
+                try {
+                    empleado.setIdEmpleado(utilidades.verificarTexto(tfIdEmpleado.getText()));
+                    empleado.setNombre(utilidades.verificarTexto(tfNombre.getText()));
+                    empleado.setGenero(utilidades.verificarTexto(String.valueOf(cbGenero.getSelectedItem())));
+                    Date selectedDate = (Date) datePicker.getModel().getValue();
+                    empleado.setFechaNacimiento(selectedDate);
+                    empleado.setDomicilio(utilidades.verificarTexto(tfDomicilio.getText()));
+                    empleado.setTelefono(utilidades.verificarTexto(tfTelefono.getText()));
+                    empleado.setCorreo(utilidades.verificarTexto(tfCorreo.getText()));
+
+                    connection.actualizarEmpleado(empleado);
+                    JOptionPane.showMessageDialog(null, "Empleado actualizado correctamente");
                     actualizarTablaEmpleados();
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -360,6 +418,18 @@ public class VentanaPrincipal extends JFrame {
 
         return data;
 
+    }
+
+    public JDatePickerImpl generarCalendario() {
+        SqlDateModel dateModel  = new SqlDateModel();
+        Properties   properties = new Properties();
+        properties.put("text.today", "Today");
+        properties.put("text.month", "Month");
+        properties.put("text.year", "Year");
+        JDatePanelImpl  datePanel  = new JDatePanelImpl(dateModel, properties);
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+
+        return datePicker;
     }
 
     public void actualizarTablaProductos() {

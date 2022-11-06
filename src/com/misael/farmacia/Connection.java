@@ -199,12 +199,30 @@ public class Connection {
 
     // Métodos de actualización
 
-    public void actualizarEmpleado(String idEmpleado) {
-        String SQLQuery  = "SELECT * FROM empleado WHERE id_empleado = ?";
-        String SQLUpdate = "UPDATE empleado SET nombre=?, genero=?, fecha_nacimiento=?, domicilio=?, telefono=?, correo=? WHERE id_empleado=?";
+    public void actualizarEmpleado(Empleado empleado) {
+        String SQLUpdate = """
+                UPDATE empleado SET nombre=?, genero=?, fecha_nacimiento=?, domicilio=?, telefono=?, correo=?
+                WHERE id_empleado=?
+                """;
 
-        ArrayList<JTextField> listaTextFields = crearInterfaz(SQLQuery, idEmpleado);
-        actualizarTabla(SQLUpdate, listaTextFields);
+        try {
+            PreparedStatement preparedStatement = db_connection.prepareStatement(SQLUpdate);
+            preparedStatement.setString(1, empleado.getNombre());
+            preparedStatement.setString(2, empleado.getGenero());
+            preparedStatement.setDate(3, empleado.getFechaNacimiento());
+            preparedStatement.setString(4, empleado.getDomicilio());
+            preparedStatement.setString(5, empleado.getTelefono());
+            preparedStatement.setString(6, empleado.getCorreo());
+            preparedStatement.setString(7, empleado.getIdEmpleado());
+
+            int       filasAfectadas = preparedStatement.executeUpdate();
+            Timestamp timestamp      = new Timestamp(System.currentTimeMillis());
+            System.out.println(timestamp + ": Actualización de empleado: " + filasAfectadas);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void actualizarProducto(Producto producto) {
@@ -220,9 +238,8 @@ public class Connection {
             preparedStatement.setInt(4, producto.getExistencia());
             preparedStatement.setString(5, producto.getFolioProducto());
 
-            int filasAfectadas = preparedStatement.executeUpdate();
-
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            int       filasAfectadas = preparedStatement.executeUpdate();
+            Timestamp timestamp      = new Timestamp(System.currentTimeMillis());
             System.out.println(timestamp + ": Actualización de producto: " + filasAfectadas);
 
         } catch (SQLException e) {

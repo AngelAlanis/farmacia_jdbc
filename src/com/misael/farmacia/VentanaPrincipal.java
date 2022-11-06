@@ -230,14 +230,15 @@ public class VentanaPrincipal extends JFrame {
 
         //Empleados
         btnAgregarEmpleado.addActionListener(e -> {
-            JTextField        tfIdEmpleado      = new JTextField();
-            JTextField        tfNombre          = new JTextField();
-            JComboBox<String> cbGenero          = new JComboBox();
-            JTextField        tfFechaNacimiento = new JTextField();
+            String[] generos = {"- - Seleccione un género - -", "Masculino", "Femenino"};
+
+            JTextField        tfIdEmpleado = new JTextField();
+            JTextField        tfNombre     = new JTextField();
+            JComboBox<String> cbGenero     = new JComboBox(generos);
 
             SqlDateModel dateModel  = new SqlDateModel();
             Properties   properties = new Properties();
-            properties.put("text.today", "Day");
+            properties.put("text.today", "Today");
             properties.put("text.month", "Month");
             properties.put("text.year", "Year");
             JDatePanelImpl  datePanel  = new JDatePanelImpl(dateModel, properties);
@@ -247,9 +248,10 @@ public class VentanaPrincipal extends JFrame {
             JTextField tfTelefono  = new JTextField();
             JTextField tfCorreo    = new JTextField();
 
+
             Object[] interfaz = {
                     new JLabel("Agregar empleado"),
-                    new JLabel("idEmpleado"),
+                    new JLabel("ID Empleado"),
                     tfIdEmpleado,
                     new JLabel("Nombre"),
                     tfNombre,
@@ -274,7 +276,8 @@ public class VentanaPrincipal extends JFrame {
                     empleado.setIdEmpleado(utilidades.verificarTexto(tfIdEmpleado.getText()));
                     empleado.setNombre(utilidades.verificarTexto(tfNombre.getText()));
                     empleado.setGenero(utilidades.verificarTexto(String.valueOf(cbGenero.getSelectedItem())));
-                    empleado.setFechaNacimiento(Date.valueOf(utilidades.verificarTexto(tfFechaNacimiento.getText())));
+                    Date selectedDate = (Date) datePicker.getModel().getValue();
+                    empleado.setFechaNacimiento(selectedDate);
                     empleado.setDomicilio(utilidades.verificarTexto(tfDomicilio.getText()));
                     empleado.setTelefono(utilidades.verificarTexto(tfTelefono.getText()));
                     empleado.setCorreo(utilidades.verificarTexto(tfCorreo.getText()));

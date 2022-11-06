@@ -210,12 +210,25 @@ public class Connection {
         actualizarTabla(SQLUpdate, listaTextFields);
     }
 
-    public void actualizarProducto(String folioProducto) {
-        String SQLQuery  = "SELECT * FROM producto WHERE folio_producto=?";
-        String SQLUpdate = "UPDATE producto SET descripcion=?, id_proveedor=?, precio=?, existencia=? WHERE folio_producto=?";
+    public void actualizarProducto(Producto producto) {
+        String SQLUpdate = """
+                UPDATE producto SET descripcion=?, id_proveedor=?, precio=?, existencia=?
+                WHERE folio_producto=?
+                """;
+        try {
+            PreparedStatement preparedStatement = db_connection.prepareStatement(SQLUpdate);
+            preparedStatement.setString(1, producto.getDescripcion());
+            preparedStatement.setString(2, producto.getIdProveedor());
+            preparedStatement.setDouble(3, producto.getPrecio());
+            preparedStatement.setInt(4, producto.getExistencia());
+            preparedStatement.setString(5, producto.getFolioProducto());
 
-        ArrayList<JTextField> listaTextFields = crearInterfaz(SQLQuery, folioProducto);
-        actualizarTabla(SQLUpdate, listaTextFields);
+            int filasAfectadas = preparedStatement.executeUpdate();
+            System.out.println("Actualización producto:" + filasAfectadas);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void actualizarProveedor(String proveedorClave) {

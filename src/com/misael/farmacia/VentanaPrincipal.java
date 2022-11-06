@@ -2,6 +2,7 @@ package com.misael.farmacia;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
+import javax.sound.midi.Soundbank;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -130,8 +131,70 @@ public class VentanaPrincipal extends JFrame {
                     String   idProveedor   = proveedor[0];
                     double   precio        = Double.parseDouble(utilidades.verificarTexto(tfPrecio.getText()));
                     int      existencia    = Integer.parseInt(utilidades.verificarTexto(tfExistencia.getText()));
-                    //connection.insertarProducto(new Producto(folioProducto, descripcion, idProveedor, precio, existencia));
+                    connection.insertarProducto(new Producto(folioProducto, descripcion, idProveedor, precio, existencia));
                     JOptionPane.showMessageDialog(null, "Producto agregado correctamente");
+                    actualizarTablaProductos();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Verifique los datos ingresados", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        btnModificarProducto.addActionListener(e -> {
+            int selectedRow = tablaProductos.getSelectedRow();
+
+            String folioProducto = String.valueOf(tablaProductos.getValueAt(selectedRow, 0));
+            String descripcion   = String.valueOf(tablaProductos.getValueAt(selectedRow, 1));
+            String idProveedor   = String.valueOf(tablaProductos.getValueAt(selectedRow, 2)).trim();
+            String precio        = String.valueOf(tablaProductos.getValueAt(selectedRow, 4));
+            String existencia    = String.valueOf(tablaProductos.getValueAt(selectedRow, 5));
+
+            JTextField           tfFolio       = new JTextField(folioProducto);
+            JTextField           tfDescripcion = new JTextField(descripcion);
+            JComboBox<Proveedor> cbProveedor   = new JComboBox();
+            JTextField           tfPrecio      = new JTextField(precio);
+            JTextField           tfExistencia  = new JTextField(existencia);
+
+            tfFolio.setEnabled(false);
+            proveedores.forEach(cbProveedor::addItem);
+
+            int size = proveedores.size();
+            for (int i = 1; i < size; i++) {
+                if (proveedores.get(i).getProveedorClave().trim().equals(idProveedor)) {
+                    cbProveedor.setSelectedIndex(i);
+                }
+            }
+
+            Object[] interfaz = {
+                    new JLabel("Modificar producto"),
+                    new JLabel("Folio"),
+                    tfFolio,
+                    new JLabel("Descripción"),
+                    tfDescripcion,
+                    new JLabel("Proveedor"),
+                    cbProveedor,
+                    new JLabel("Precio"),
+                    tfPrecio,
+                    new JLabel("Existencia"),
+                    tfExistencia
+            };
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Modificar producto", JOptionPane.OK_CANCEL_OPTION);
+
+            if (confirmacion == JOptionPane.OK_OPTION) {
+                try {
+                    Producto producto = new Producto();
+
+                    producto.setFolioProducto(utilidades.verificarTexto(tfFolio.getText()));
+                    producto.setDescripcion(utilidades.verificarTexto(tfDescripcion.getText()));
+                    String[] proveedor = cbProveedor.getSelectedItem().toString().split("-", 2);
+                    producto.setIdProveedor(proveedor[0].trim());
+                    producto.setPrecio(Double.parseDouble(utilidades.verificarTexto(tfPrecio.getText())));
+                    producto.setExistencia(Integer.parseInt(utilidades.verificarTexto(tfExistencia.getText())));
+
+                    connection.actualizarProducto(producto);
+                    JOptionPane.showMessageDialog(null, "Producto actualizado correctamente");
                     actualizarTablaProductos();
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -214,7 +277,8 @@ public class VentanaPrincipal extends JFrame {
         String sqlQuery = """
                 SELECT producto.folio_producto, producto.descripcion, producto.id_proveedor, proveedor.nombre, producto.precio, producto.existencia
                 FROM producto, proveedor
-                WHERE producto.id_proveedor = proveedor.proveedor_clave;
+                WHERE producto.id_proveedor = proveedor.proveedor_clave
+                ORDER BY producto.folio_producto;
                 """;
         Vector<Vector<Object>> data = obtenerDatosTabla(sqlQuery);
         tablaProductos.setModel(new DefaultTableModel(data, columnasProductos));

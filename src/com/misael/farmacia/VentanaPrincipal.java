@@ -123,13 +123,18 @@ public class VentanaPrincipal extends JFrame {
             int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Agregar producto", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
             if (confirmacion == JOptionPane.OK_OPTION) {
-                String folioProducto = tfFolio.getText();
-                String descripcion   = tfDescripcion.getText();
-                String idProveedor   = cbProveedor.getSelectedItem().toString();
-                double precio        = Double.parseDouble(tfPrecio.getText());
-                int    existencia    = Integer.parseInt(tfExistencia.getText());
+                String   folioProducto = tfFolio.getText();
+                String   descripcion   = tfDescripcion.getText();
+                String[] proveedor     = cbProveedor.getSelectedItem().toString().split("-", 2);
+                String   idProveedor   = proveedor[0];
+                double   precio        = Double.parseDouble(tfPrecio.getText());
+                int      existencia    = Integer.parseInt(tfExistencia.getText());
 
                 connection.insertarProducto(new Producto(folioProducto, descripcion, idProveedor, precio, existencia));
+
+                JOptionPane.showMessageDialog(null, "Producto agregado correctamente");
+
+                actualizarTablaProductos();
             }
         });
     }

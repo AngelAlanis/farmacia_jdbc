@@ -59,7 +59,7 @@ public class Proveedor {
 
     @Override
     public String toString() {
-        return proveedorClave + " | " + nombre;
+        return proveedorClave + " - " + nombre;
     }
 
     public Proveedor() {

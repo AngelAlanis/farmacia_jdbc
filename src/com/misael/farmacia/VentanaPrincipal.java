@@ -202,6 +202,23 @@ public class VentanaPrincipal extends JFrame {
                 }
             }
         });
+
+        btnEliminarProducto.addActionListener(e -> {
+            int    selectedRow = tablaProductos.getSelectedRow();
+            String idProducto  = String.valueOf(tablaProductos.getValueAt(selectedRow, 0));
+            String descripcion = String.valueOf(tablaProductos.getValueAt(selectedRow, 1));
+
+            String mensaje = "¿Está seguro que desea eliminar a " + idProducto + " - " + descripcion + "?\nEsta acción no se puede deshacer";
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, mensaje, "Eliminación de producto", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            if(confirmacion == JOptionPane.OK_OPTION){
+                connection.eliminarProducto(idProducto);
+                JOptionPane.showMessageDialog(null, "Producto eliminado correctamente.");
+                actualizarTablaProductos();
+            }
+
+        });
     }
 
     public void inicializarIconos() {

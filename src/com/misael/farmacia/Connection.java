@@ -6,12 +6,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Vector;
 
 public class Connection {
@@ -103,8 +100,8 @@ public class Connection {
 
             int filasAfectadas = preparedStatement.executeUpdate();
 
-            System.out.println("Filas afectadas: " + filasAfectadas);
-
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            System.out.println(timestamp + ": Inserción de producto: " + filasAfectadas);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -224,7 +221,9 @@ public class Connection {
             preparedStatement.setString(5, producto.getFolioProducto());
 
             int filasAfectadas = preparedStatement.executeUpdate();
-            System.out.println("Actualización producto:" + filasAfectadas);
+
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            System.out.println(timestamp + ": Actualización de producto: " + filasAfectadas);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -279,7 +278,8 @@ public class Connection {
             preparedStatement.setString(1, folioProducto);
             int filasAfectadas = preparedStatement.executeUpdate();
 
-            System.out.println("Filas afectadas: " + filasAfectadas);
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            System.out.println(timestamp + ": Eliminación de producto: " + filasAfectadas);
 
         } catch (SQLException e) {
             e.printStackTrace();

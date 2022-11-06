@@ -65,6 +65,10 @@ public class Proveedor {
     public Proveedor() {
     }
 
+    public Proveedor(String nombre) {
+        this.nombre = nombre;
+    }
+
     public Proveedor(String proveedorClave, String nombre) {
         this.proveedorClave = proveedorClave;
         this.nombre         = nombre;

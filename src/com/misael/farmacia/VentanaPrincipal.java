@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -103,7 +104,6 @@ public class VentanaPrincipal extends JFrame {
             JTextField           tfPrecio      = new JTextField();
             JTextField           tfExistencia  = new JTextField();
 
-
             proveedores.forEach(cbProveedor::addItem);
 
             Object[] interfaz = {
@@ -123,18 +123,20 @@ public class VentanaPrincipal extends JFrame {
             int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Agregar producto", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
             if (confirmacion == JOptionPane.OK_OPTION) {
-                String   folioProducto = tfFolio.getText();
-                String   descripcion   = tfDescripcion.getText();
-                String[] proveedor     = cbProveedor.getSelectedItem().toString().split("-", 2);
-                String   idProveedor   = proveedor[0];
-                double   precio        = Double.parseDouble(tfPrecio.getText());
-                int      existencia    = Integer.parseInt(tfExistencia.getText());
-
-                connection.insertarProducto(new Producto(folioProducto, descripcion, idProveedor, precio, existencia));
-
-                JOptionPane.showMessageDialog(null, "Producto agregado correctamente");
-
-                actualizarTablaProductos();
+                try {
+                    String   folioProducto = utilidades.verificarTexto(tfFolio.getText());
+                    String   descripcion   = utilidades.verificarTexto(tfDescripcion.getText());
+                    String[] proveedor     = cbProveedor.getSelectedItem().toString().split("-", 2);
+                    String   idProveedor   = proveedor[0];
+                    double   precio        = Double.parseDouble(utilidades.verificarTexto(tfPrecio.getText()));
+                    int      existencia    = Integer.parseInt(utilidades.verificarTexto(tfExistencia.getText()));
+                    //connection.insertarProducto(new Producto(folioProducto, descripcion, idProveedor, precio, existencia));
+                    JOptionPane.showMessageDialog(null, "Producto agregado correctamente");
+                    actualizarTablaProductos();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Verifique los datos ingresados", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }
@@ -230,6 +232,8 @@ public class VentanaPrincipal extends JFrame {
         tablaProveedores.setModel(new DefaultTableModel(data, columnasProvedores));
 
         // Filas
+        proveedores.clear();
+        proveedores.add(new Proveedor("", "- Seleccione un proveedor - -"));
         for (int i = 0; i < data.size(); i++) {
             String proveedorClave = data.get(i).get(0).toString();
             String nombre         = data.get(i).get(1).toString();

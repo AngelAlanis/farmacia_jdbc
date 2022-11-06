@@ -2,21 +2,12 @@ package com.misael.farmacia;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -100,9 +91,47 @@ public class VentanaPrincipal extends JFrame {
     private final Vector<String> columnasHistorialVentas = new Vector<>(Arrays.asList("Folio Venta", "Fecha", "ID Detalles", "ID Empleado", "Nombre empleado", "Importe", "Total pagado"));
     private final Vector<String> columnasAbastecimientos = new Vector<>(Arrays.asList("Clave", "Fecha", "Clave Proveedor", "Nombre Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"));
 
+    private ArrayList<Proveedor> proveedores = new ArrayList<>();
 
     public void initActionListeners() {
         btnSalir.addActionListener(e -> System.exit(0));
+
+        btnAgregarProducto.addActionListener(e -> {
+            JTextField           tfFolio       = new JTextField();
+            JTextField           tfDescripcion = new JTextField();
+            JComboBox<Proveedor> cbProveedor   = new JComboBox();
+            JTextField           tfPrecio      = new JTextField();
+            JTextField           tfExistencia  = new JTextField();
+
+
+            proveedores.forEach(cbProveedor::addItem);
+
+            Object[] interfaz = {
+                    new JLabel("Agregar producto"),
+                    new JLabel("Folio"),
+                    tfFolio,
+                    new JLabel("Descripción"),
+                    tfDescripcion,
+                    new JLabel("Proveedor"),
+                    cbProveedor,
+                    new JLabel("Precio"),
+                    tfPrecio,
+                    new JLabel("Existencia"),
+                    tfExistencia
+            };
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Agregar producto", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            if (confirmacion == JOptionPane.OK_OPTION) {
+                String folioProducto = tfFolio.getText();
+                String descripcion   = tfDescripcion.getText();
+                String idProveedor   = cbProveedor.getSelectedItem().toString();
+                double precio        = Double.parseDouble(tfPrecio.getText());
+                int    existencia    = Integer.parseInt(tfExistencia.getText());
+
+                connection.insertarProducto(new Producto(folioProducto, descripcion, idProveedor, precio, existencia));
+            }
+        });
     }
 
     public void inicializarIconos() {
@@ -194,6 +223,13 @@ public class VentanaPrincipal extends JFrame {
         String                 sqlQuery = "SELECT * FROM proveedor";
         Vector<Vector<Object>> data     = obtenerDatosTabla(sqlQuery);
         tablaProveedores.setModel(new DefaultTableModel(data, columnasProvedores));
+
+        // Filas
+        for (int i = 0; i < data.size(); i++) {
+            String proveedorClave = data.get(i).get(0).toString();
+            String nombre         = data.get(i).get(1).toString();
+            proveedores.add(new Proveedor(proveedorClave, nombre));
+        }
     }
 
     public void actualizarTablaHistorialVentas() {

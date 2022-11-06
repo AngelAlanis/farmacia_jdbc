@@ -57,7 +57,17 @@ public class Proveedor {
         this.rfc = rfc;
     }
 
+    @Override
+    public String toString() {
+        return proveedorClave + " | " + nombre;
+    }
+
     public Proveedor() {
+    }
+
+    public Proveedor(String proveedorClave, String nombre) {
+        this.proveedorClave = proveedorClave;
+        this.nombre         = nombre;
     }
 
     public Proveedor(String proveedorClave, String nombre, String domicilio, String telefono, String correo, String rfc) {

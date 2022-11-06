@@ -1,16 +1,23 @@
 package com.misael.farmacia;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import org.jdatepicker.*;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.SqlDateModel;
+import org.jdatepicker.impl.UtilDateModel;
 
 import javax.sound.midi.Soundbank;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.Vector;
 
 public class VentanaPrincipal extends JFrame {
@@ -98,6 +105,7 @@ public class VentanaPrincipal extends JFrame {
     public void initActionListeners() {
         btnSalir.addActionListener(e -> System.exit(0));
 
+        //Productos
         btnAgregarProducto.addActionListener(e -> {
             JTextField           tfFolio       = new JTextField();
             JTextField           tfDescripcion = new JTextField();
@@ -212,12 +220,73 @@ public class VentanaPrincipal extends JFrame {
 
             int confirmacion = JOptionPane.showConfirmDialog(null, mensaje, "Eliminación de producto", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 
-            if(confirmacion == JOptionPane.OK_OPTION){
+            if (confirmacion == JOptionPane.OK_OPTION) {
                 connection.eliminarProducto(idProducto);
                 JOptionPane.showMessageDialog(null, "Producto eliminado correctamente.");
                 actualizarTablaProductos();
             }
 
+        });
+
+        //Empleados
+        btnAgregarEmpleado.addActionListener(e -> {
+            JTextField        tfIdEmpleado      = new JTextField();
+            JTextField        tfNombre          = new JTextField();
+            JComboBox<String> cbGenero          = new JComboBox();
+            JTextField        tfFechaNacimiento = new JTextField();
+
+            SqlDateModel dateModel  = new SqlDateModel();
+            Properties   properties = new Properties();
+            properties.put("text.today", "Day");
+            properties.put("text.month", "Month");
+            properties.put("text.year", "Year");
+            JDatePanelImpl  datePanel  = new JDatePanelImpl(dateModel, properties);
+            JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+
+            JTextField tfDomicilio = new JTextField();
+            JTextField tfTelefono  = new JTextField();
+            JTextField tfCorreo    = new JTextField();
+
+            Object[] interfaz = {
+                    new JLabel("Agregar empleado"),
+                    new JLabel("idEmpleado"),
+                    tfIdEmpleado,
+                    new JLabel("Nombre"),
+                    tfNombre,
+                    new JLabel("Género"),
+                    cbGenero,
+                    new JLabel("Fecha de nacimiento"),
+                    datePicker,
+                    new JLabel("Domicilio"),
+                    tfDomicilio,
+                    new JLabel("Teléfono"),
+                    tfTelefono,
+                    new JLabel("Correo electrónico"),
+                    tfCorreo
+            };
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Agregar empleado", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            if (confirmacion == JOptionPane.OK_OPTION) {
+                try {
+                    Empleado empleado = new Empleado();
+
+                    empleado.setIdEmpleado(utilidades.verificarTexto(tfIdEmpleado.getText()));
+                    empleado.setNombre(utilidades.verificarTexto(tfNombre.getText()));
+                    empleado.setGenero(utilidades.verificarTexto(String.valueOf(cbGenero.getSelectedItem())));
+                    empleado.setFechaNacimiento(Date.valueOf(utilidades.verificarTexto(tfFechaNacimiento.getText())));
+                    empleado.setDomicilio(utilidades.verificarTexto(tfDomicilio.getText()));
+                    empleado.setTelefono(utilidades.verificarTexto(tfTelefono.getText()));
+                    empleado.setCorreo(utilidades.verificarTexto(tfCorreo.getText()));
+
+                    connection.insertarEmpleado(empleado);
+                    JOptionPane.showMessageDialog(null, "Empleado agregado correctamente");
+                    actualizarTablaEmpleados();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Verifique los datos ingresados", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         });
     }
 

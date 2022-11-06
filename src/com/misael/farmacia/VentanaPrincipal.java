@@ -349,6 +349,24 @@ public class VentanaPrincipal extends JFrame {
                 }
             }
         });
+
+        btnEliminarEmpleado.addActionListener(e -> {
+            int    selectedRow = tablaEmpleados.getSelectedRow();
+            String idEmpleado  = String.valueOf(tablaEmpleados.getValueAt(selectedRow, 0));
+            String nombre      = String.valueOf(tablaEmpleados.getValueAt(selectedRow, 1));
+
+            String mensaje = "¿Está seguro que desea eliminar a " + idEmpleado + " - " + nombre + "?\nEsta acción no se puede deshacer";
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, mensaje, "Eliminación de producto", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            if (confirmacion == JOptionPane.OK_OPTION) {
+                connection.eliminarEmpleado(idEmpleado);
+                JOptionPane.showMessageDialog(null, "Producto eliminado correctamente.");
+                actualizarTablaEmpleados();
+            }
+
+        });
+
     }
 
     public void inicializarIconos() {

@@ -412,6 +412,57 @@ public class VentanaPrincipal extends JFrame {
                 actualizarTablaProveedores();
             }
         });
+
+        btnModificarProveedor.addActionListener(e -> {
+            Proveedor proveedor   = new Proveedor();
+            int       selectedRow = tablaProveedores.getSelectedRow();
+
+            proveedor.setProveedorClave(String.valueOf(tablaProveedores.getValueAt(selectedRow, 0)));
+            proveedor.setNombre(String.valueOf(tablaProveedores.getValueAt(selectedRow, 1)));
+            proveedor.setDomicilio(String.valueOf(tablaProveedores.getValueAt(selectedRow, 2)));
+            proveedor.setTelefono(String.valueOf(tablaProveedores.getValueAt(selectedRow, 3)));
+            proveedor.setCorreo(String.valueOf(tablaProveedores.getValueAt(selectedRow, 4)));
+            proveedor.setRfc(String.valueOf(tablaProveedores.getValueAt(selectedRow, 5)));
+
+            JTextField tfProveedorClave = new JTextField(proveedor.getProveedorClave());
+            JTextField tfNombre         = new JTextField(proveedor.getNombre());
+            JTextField tfDomicilio      = new JTextField(proveedor.getDomicilio());
+            JTextField tfTelefono       = new JTextField(proveedor.getTelefono());
+            JTextField tfCorreo         = new JTextField(proveedor.getCorreo());
+            JTextField tfRfc            = new JTextField(proveedor.getRfc());
+
+            tfProveedorClave.setEnabled(false);
+
+            Object[] interfaz = {
+                    new JLabel("Agregar proveedor"),
+                    new JLabel("Proveedor clave"),
+                    tfProveedorClave,
+                    new JLabel("Nombre"),
+                    tfNombre,
+                    new JLabel("Domicilio"),
+                    tfDomicilio,
+                    new JLabel("Teléfono"),
+                    tfTelefono,
+                    new JLabel("Correo"),
+                    tfCorreo,
+                    new JLabel("RFC"),
+                    tfRfc
+            };
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Agregar empleado", JOptionPane.OK_CANCEL_OPTION);
+
+            if (confirmacion == JOptionPane.OK_OPTION) {
+                proveedor.setNombre(utilidades.verificarTexto(tfNombre.getText()));
+                proveedor.setDomicilio(utilidades.verificarTexto(tfDomicilio.getText()));
+                proveedor.setTelefono(utilidades.verificarTexto(tfTelefono.getText()));
+                proveedor.setCorreo(utilidades.verificarTexto(tfCorreo.getText()));
+                proveedor.setRfc(utilidades.verificarTexto(tfRfc.getText()));
+
+                connection.actualizarProveedor(proveedor);
+                JOptionPane.showMessageDialog(null, "Proveedor modificado correctamente.");
+                actualizarTablaProveedores();
+            }
+        });
     }
 
     public void inicializarIconos() {

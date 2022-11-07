@@ -247,12 +247,27 @@ public class Connection {
         }
     }
 
-    public void actualizarProveedor(String proveedorClave) {
-        String SQLQuery  = "SELECT * FROM proveedor WHERE proveedor_clave=?";
-        String SQLUpdate = "UPDATE proveedor SET nombre=?, domicilio=?, telefono=?, correo=?, rfc=? WHERE proveedor_clave=?";
+    public void actualizarProveedor(Proveedor proveedor) {
+        String SQLUpdate = """
+                UPDATE proveedor SET nombre=?, domicilio=?, telefono=?, correo=?, rfc=?
+                WHERE proveedor_clave=?
+                """;
 
-        ArrayList<JTextField> listaTextFields = crearInterfaz(SQLQuery, proveedorClave);
-        actualizarTabla(SQLUpdate, listaTextFields);
+        try {
+            PreparedStatement preparedStatement = db_connection.prepareStatement(SQLUpdate);
+            preparedStatement.setString(1, proveedor.getNombre());
+            preparedStatement.setString(2, proveedor.getDomicilio());
+            preparedStatement.setString(3, proveedor.getTelefono());
+            preparedStatement.setString(4, proveedor.getCorreo());
+            preparedStatement.setString(5, proveedor.getRfc());
+            preparedStatement.setString(6, proveedor.getProveedorClave());
+
+            int       filasAfectadas = preparedStatement.executeUpdate();
+            Timestamp timestamp      = new Timestamp(System.currentTimeMillis());
+            System.out.println(timestamp + ": Actualización de proveedor: " + filasAfectadas);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     // Métodos de eliminación

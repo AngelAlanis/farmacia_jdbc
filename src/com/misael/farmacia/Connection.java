@@ -270,6 +270,26 @@ public class Connection {
         }
     }
 
+    public void actualizarProveedoresProductos(String proveedorClave) {
+        final String defaultProveedor = "AAA00";
+        String SQLUpdate = """
+                UPDATE producto SET id_proveedor=?
+                WHERE id_proveedor=?
+                """;
+
+        try {
+            PreparedStatement preparedStatement = db_connection.prepareStatement(SQLUpdate);
+            preparedStatement.setString(1, defaultProveedor);
+            preparedStatement.setString(2, proveedorClave);
+
+            int       filasAfectadas = preparedStatement.executeUpdate();
+            Timestamp timestamp      = new Timestamp(System.currentTimeMillis());
+            System.out.println(timestamp + ": Actualización de proveedores: " + filasAfectadas);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Métodos de eliminación
 
     public void eliminarEmpleado(String idEmpleado) {

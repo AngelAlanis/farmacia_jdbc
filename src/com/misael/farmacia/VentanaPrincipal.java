@@ -397,7 +397,7 @@ public class VentanaPrincipal extends JFrame {
                     tfRfc
             };
 
-            int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Agregar empleado", JOptionPane.OK_CANCEL_OPTION);
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Agregar proveedor", JOptionPane.OK_CANCEL_OPTION);
 
             if (confirmacion == JOptionPane.OK_OPTION) {
                 proveedor.setProveedorClave(utilidades.verificarTexto(tfProveedorClave.getText()));
@@ -449,7 +449,7 @@ public class VentanaPrincipal extends JFrame {
                     tfRfc
             };
 
-            int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Agregar empleado", JOptionPane.OK_CANCEL_OPTION);
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Agregar proveedor", JOptionPane.OK_CANCEL_OPTION);
 
             if (confirmacion == JOptionPane.OK_OPTION) {
                 proveedor.setNombre(utilidades.verificarTexto(tfNombre.getText()));
@@ -461,6 +461,24 @@ public class VentanaPrincipal extends JFrame {
                 connection.actualizarProveedor(proveedor);
                 JOptionPane.showMessageDialog(null, "Proveedor modificado correctamente.");
                 actualizarTablaProveedores();
+            }
+        });
+
+        btnEliminarProveedor.addActionListener(e -> {
+            int    selectedRow    = tablaProveedores.getSelectedRow();
+            String proveedorClave = String.valueOf(tablaProveedores.getValueAt(selectedRow, 0));
+            String nombre         = String.valueOf(tablaProveedores.getValueAt(selectedRow, 1));
+
+            String mensaje = "¿Está seguro que desea eliminar a " + proveedorClave + " - " + nombre + "?\nEsta acción no se puede deshacer";
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, mensaje, "Eliminación de proveedor", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+
+            if (confirmacion == JOptionPane.OK_OPTION) {
+                connection.actualizarProveedoresProductos(proveedorClave);
+                connection.eliminarProveedor(proveedorClave);
+                JOptionPane.showMessageDialog(null, "Proveedor eliminado correctamente.");
+                actualizarTablaProveedores();
+                actualizarTablaProductos();
             }
         });
     }

@@ -369,6 +369,49 @@ public class VentanaPrincipal extends JFrame {
 
         });
 
+        //Proveedores
+
+        btnAgregarProveedor.addActionListener(e -> {
+            Proveedor proveedor = new Proveedor();
+
+            JTextField tfProveedorClave = new JTextField();
+            JTextField tfNombre         = new JTextField();
+            JTextField tfDomicilio      = new JTextField();
+            JTextField tfTelefono       = new JTextField();
+            JTextField tfCorreo         = new JTextField();
+            JTextField tfRfc            = new JTextField();
+
+            Object[] interfaz = {
+                    new JLabel("Agregar proveedor"),
+                    new JLabel("Proveedor clave"),
+                    tfProveedorClave,
+                    new JLabel("Nombre"),
+                    tfNombre,
+                    new JLabel("Domicilio"),
+                    tfDomicilio,
+                    new JLabel("Teléfono"),
+                    tfTelefono,
+                    new JLabel("Correo"),
+                    tfCorreo,
+                    new JLabel("RFC"),
+                    tfRfc
+            };
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Agregar empleado", JOptionPane.OK_CANCEL_OPTION);
+
+            if (confirmacion == JOptionPane.OK_OPTION) {
+                proveedor.setProveedorClave(utilidades.verificarTexto(tfProveedorClave.getText()));
+                proveedor.setNombre(utilidades.verificarTexto(tfNombre.getText()));
+                proveedor.setDomicilio(utilidades.verificarTexto(tfDomicilio.getText()));
+                proveedor.setTelefono(utilidades.verificarTexto(tfTelefono.getText()));
+                proveedor.setCorreo(utilidades.verificarTexto(tfCorreo.getText()));
+                proveedor.setRfc(utilidades.verificarTexto(tfRfc.getText()));
+
+                connection.insertarProveedor(proveedor);
+                JOptionPane.showMessageDialog(null, "Proveedor agregado correctamente.");
+                actualizarTablaProveedores();
+            }
+        });
     }
 
     public void inicializarIconos() {

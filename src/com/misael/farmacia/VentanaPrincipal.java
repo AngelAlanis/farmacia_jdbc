@@ -11,6 +11,8 @@ import javax.sound.midi.Soundbank;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -95,7 +97,7 @@ public class VentanaPrincipal extends JFrame {
     private final Vector<String> columnasEmpleados       = new Vector<>(Arrays.asList("ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"));
     private final Vector<String> columnasProvedores      = new Vector<>(Arrays.asList("Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"));
     private final Vector<String> columnasHistorialVentas = new Vector<>(Arrays.asList("Folio Venta", "Fecha", "ID Detalles", "ID Empleado", "Nombre empleado", "Importe", "Total pagado"));
-    private final Vector<String> columnasAbastecimientos = new Vector<>(Arrays.asList("Clave", "Fecha", "Clave Proveedor", "Nombre Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"));
+    private final Vector<String> columnasAbastecimientos = new Vector<>(Arrays.asList("Clave", "Fecha", "Clave Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"));
 
     private ArrayList<Proveedor> proveedores = new ArrayList<>();
 
@@ -481,6 +483,35 @@ public class VentanaPrincipal extends JFrame {
                 actualizarTablaProductos();
             }
         });
+
+        btnDetallesHistorialVentas.addActionListener(e -> {
+            int selectedRow = tablaHistorialVentas.getSelectedRow();
+
+            String idDetalles = String.valueOf(tablaHistorialVentas.getValueAt(selectedRow, 2));
+            String fecha      = String.valueOf(tablaHistorialVentas.getValueAt(selectedRow, 1));
+
+            String sentenciaSQL = """
+                    SELECT detalle_venta.folio_detalle_venta, detalle_venta.id_detalles, detalle_venta.folio_producto, producto.descripcion, detalle_venta.cantidad
+                    FROM detalle_venta, producto
+                    WHERE detalle_venta.folio_producto = producto.folio_producto AND detalle_venta.id_detalles =
+                    """;
+
+            sentenciaSQL += idDetalles;
+
+            System.out.println(sentenciaSQL);
+            JTable      tablaDetalles = new JTable();
+            JScrollPane spDetalles    = new JScrollPane(tablaDetalles);
+            tablaDetalles.setModel(connection.fillTable(sentenciaSQL));
+
+            Object[] interfaz = {
+                    new JLabel("Detalles abastecimiento"),
+                    new JLabel(fecha),
+                    spDetalles
+            };
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Detalles abasteciimento", JOptionPane.OK_CANCEL_OPTION);
+
+        });
     }
 
     public void inicializarIconos() {
@@ -608,9 +639,7 @@ public class VentanaPrincipal extends JFrame {
 
     public void actualizarTablaAbastecimientos() {
         String sqlQuery = """
-                SELECT abastecimiento.clave, abastecimiento.fecha, abastecimiento.clave_proveedor, proveedor.nombre, abastecimiento.id_detalles, abastecimiento.importe_pagado, abastecimiento.total_a_pagar, abastecimiento.pago_restante
-                FROM abastecimiento, proveedor
-                WHERE abastecimiento.clave_proveedor = proveedor.proveedor_clave;
+                SELECT * FROM abastecimiento;
                 """;
         Vector<Vector<Object>> data = obtenerDatosTabla(sqlQuery);
         tablaAbastecimientos.setModel(new DefaultTableModel(data, columnasAbastecimientos));

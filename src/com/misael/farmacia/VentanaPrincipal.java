@@ -504,6 +504,35 @@ public class VentanaPrincipal extends JFrame {
             tablaDetalles.setModel(connection.fillTable(sentenciaSQL));
 
             Object[] interfaz = {
+                    new JLabel("Detalles venta"),
+                    new JLabel(fecha),
+                    spDetalles
+            };
+
+            int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Detalles venta", JOptionPane.OK_CANCEL_OPTION);
+
+        });
+
+        btnDetallesAbastecimiento.addActionListener(e -> {
+            int selectedRow = tablaAbastecimientos.getSelectedRow();
+
+            String idDetalles = String.valueOf(tablaAbastecimientos.getValueAt(selectedRow, 3));
+            String fecha      = String.valueOf(tablaAbastecimientos.getValueAt(selectedRow, 1));
+
+            String sentenciaSQL = """
+                    SELECT detalle_abastecimiento.folio_detalle_abastecimiento, detalle_abastecimiento.id_detalles, detalle_abastecimiento.folio_producto, producto.descripcion, detalle_abastecimiento.folio_abastecimiento, detalle_abastecimiento.cantidad
+                    FROM detalle_abastecimiento, producto
+                    WHERE detalle_abastecimiento.folio_producto = producto.folio_producto AND detalle_abastecimiento.id_detalles =
+                    """;
+
+            sentenciaSQL += idDetalles;
+
+            System.out.println(sentenciaSQL);
+            JTable      tablaDetalles = new JTable();
+            JScrollPane spDetalles    = new JScrollPane(tablaDetalles);
+            tablaDetalles.setModel(connection.fillTable(sentenciaSQL));
+
+            Object[] interfaz = {
                     new JLabel("Detalles abastecimiento"),
                     new JLabel(fecha),
                     spDetalles
@@ -512,6 +541,7 @@ public class VentanaPrincipal extends JFrame {
             int confirmacion = JOptionPane.showConfirmDialog(null, interfaz, "Detalles abasteciimento", JOptionPane.OK_CANCEL_OPTION);
 
         });
+
     }
 
     public void inicializarIconos() {

@@ -90,10 +90,11 @@ public class VentanaPrincipal extends JFrame {
 
     private Utilidades utilidades;
 
-    private Connection connection;
+    private Connection         connection;
+    private VentanaBuscarVenta ventanaBuscarVenta;
 
     private final Vector<String> columnasProductos       = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Clave Proveedor", "Nombre proveedor", "Precio", "Existencia"));
-    private final Vector<String> columnasVenta           = new Vector<>(Arrays.asList("Folio", "Fecha", "Descripción del producto", "Precio de venta", "Cantidad", "Importe", "Existencia"));
+    private final Vector<String> columnasVenta           = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Precio de venta", "Cantidad", "Importe", "Existencia"));
     private final Vector<String> columnasEmpleados       = new Vector<>(Arrays.asList("ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"));
     private final Vector<String> columnasProvedores      = new Vector<>(Arrays.asList("Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"));
     private final Vector<String> columnasHistorialVentas = new Vector<>(Arrays.asList("Folio Venta", "Fecha", "ID Detalles", "ID Empleado", "Nombre empleado", "Importe", "Total pagado"));
@@ -542,6 +543,18 @@ public class VentanaPrincipal extends JFrame {
 
         });
 
+        btnBuscar.addActionListener(e -> {
+            if (ventanaBuscarVenta == null) {
+                ventanaBuscarVenta = new VentanaBuscarVenta(this, connection);
+            }
+
+            ventanaBuscarVenta.setVisible(true);
+        });
+
+        btnCobrar.addActionListener(e -> {
+            System.out.println(ventanaBuscarVenta.listaProductos);
+        });
+
     }
 
     public void inicializarIconos() {
@@ -573,6 +586,10 @@ public class VentanaPrincipal extends JFrame {
         actualizarTablaHistorialVentas();
         actualizarTablaAbastecimientos();
 
+        //panelPieProductos.remove(btnAgregarProducto);
+        //panelPieProductos.remove(btnModificarProducto);
+        //panelPieProductos.remove(btnEliminarProducto);
+
         //Iconos de las pestañas del tabbedPane
         tabbedPane.setIconAt(0, iconoVenta);
         tabbedPane.setIconAt(1, iconoInventario);
@@ -580,6 +597,11 @@ public class VentanaPrincipal extends JFrame {
         tabbedPane.setIconAt(3, iconoProveedores);
         tabbedPane.setIconAt(4, iconoHistorialVentas);
         tabbedPane.setIconAt(5, iconoAbastecimientos);
+
+        //tabbedPane.remove(panelEmpleados);
+        //tabbedPane.remove(panelProveedores);
+        //tabbedPane.remove(panelHistorialVentas);
+        //tabbedPane.remove(panelAbastecimientos);
     }
 
     public Vector<Vector<Object>> obtenerDatosTabla(String sqlQuery) {
@@ -675,9 +697,14 @@ public class VentanaPrincipal extends JFrame {
         tablaAbastecimientos.setModel(new DefaultTableModel(data, columnasAbastecimientos));
     }
 
+    public void agregarProductoVenta(String folioProducto, int cantidad){
+
+    }
+
     public VentanaPrincipal() {
         utilidades = new Utilidades();
         connection = new Connection();
+
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1366, 728);
         setLocationRelativeTo(null);

@@ -33,9 +33,14 @@ public class DetalleVenta {
     public DetalleVenta() {
     }
 
+    public DetalleVenta(String folioProducto, int cantidad) {
+        this.folioProducto = folioProducto;
+        this.cantidad      = cantidad;
+    }
+
     public DetalleVenta(String idDetalles, String folioProducto, int cantidad) {
-        this.idDetalles        = idDetalles;
-        this.folioProducto     = folioProducto;
-        this.cantidad          = cantidad;
+        this.idDetalles    = idDetalles;
+        this.folioProducto = folioProducto;
+        this.cantidad      = cantidad;
     }
 }

@@ -30,6 +30,15 @@ public class DetalleVenta {
         this.cantidad = cantidad;
     }
 
+    @Override
+    public String toString() {
+        return "DetalleVenta{" +
+                "idDetalles=" + idDetalles +
+                ", folioProducto='" + folioProducto + '\'' +
+                ", cantidad=" + cantidad +
+                '}';
+    }
+
     public DetalleVenta() {
     }
 

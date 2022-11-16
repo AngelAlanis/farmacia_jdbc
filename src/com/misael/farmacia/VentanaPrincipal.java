@@ -7,10 +7,8 @@ import org.jdatepicker.impl.SqlDateModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.sql.*;
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 
 public class VentanaPrincipal extends JFrame {
@@ -82,10 +80,12 @@ public class VentanaPrincipal extends JFrame {
     private JButton     btnDetallesHistorialVentas;
     private JToolBar    trailing;
 
-    private Utilidades utilidades;
-
+    private Utilidades         utilidades;
     private Connection         connection;
     private VentanaBuscarVenta ventanaBuscarVenta;
+
+    private double totalAPagar;
+    private double totalPagado;
 
     private final Vector<String> columnasProductos       = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Clave Proveedor", "Nombre proveedor", "Precio", "Existencia"));
     private final Vector<String> columnasVenta           = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Precio de venta", "Cantidad", "Importe", "Existencia"));
@@ -546,6 +546,19 @@ public class VentanaPrincipal extends JFrame {
         });
 
         btnCobrar.addActionListener(e -> {
+            totalAPagar = 100;
+            totalPagado = 100;
+            Venta venta = new Venta("AMAH01", totalAPagar, totalPagado);
+
+            connection.insertarVenta(venta);
+
+            int totalProductos = tableVenta.getRowCount();
+
+            for (int i = 0; i < totalProductos; i++) {
+                String folioProducto = String.valueOf(tableVenta.getValueAt(i, 0));
+                int    cantidad      = Integer.parseInt(String.valueOf(tableVenta.getValueAt(i, 3)));
+                connection.insertarDetalleVenta(new DetalleVenta(folioProducto, cantidad));
+            }
 
         });
 

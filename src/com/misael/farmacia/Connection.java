@@ -546,6 +546,29 @@ public class Connection {
 
     }
 
+    public Object[] obtenerDatos(String sqlQuery){
+        Object[] datos = null;
+
+        try {
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sqlQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            resultSet.next();
+
+            int columnCount = resultSet.getMetaData().getColumnCount();
+            datos = new Object[columnCount];
+
+            for (int i = 1; i <= columnCount ; i++) {
+                datos[i-1] = resultSet.getString(i);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return datos;
+    }
+
 
     public Connection() {
         connect();

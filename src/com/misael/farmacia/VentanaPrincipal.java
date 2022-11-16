@@ -552,7 +552,7 @@ public class VentanaPrincipal extends JFrame {
         });
 
         btnCobrar.addActionListener(e -> {
-            System.out.println(ventanaBuscarVenta.listaProductos);
+            System.out.println(ventanaBuscarVenta.listaProductos.toString());
         });
 
     }
@@ -697,8 +697,8 @@ public class VentanaPrincipal extends JFrame {
         tablaAbastecimientos.setModel(new DefaultTableModel(data, columnasAbastecimientos));
     }
 
-    public void agregarProductoVenta(String folioProducto, int cantidad){
-
+    public void agregarProductoVenta(VentaTienda ventaTienda) {
+        ((DefaultTableModel) tableVenta.getModel()).addRow(ventaTienda.getValores());
     }
 
     public VentanaPrincipal() {

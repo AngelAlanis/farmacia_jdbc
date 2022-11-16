@@ -22,8 +22,8 @@ public class VentanaBuscarVenta extends JFrame {
     private JPanel      panelBotones;
     private Connection  db_connection;
 
-    ArrayList<DetalleVenta> listaProductos;
-    VentanaPrincipal        ventanaPrincipal;
+    ArrayList<VentaTienda> listaProductos;
+    VentanaPrincipal       ventanaPrincipal;
 
     public void initComponents() {
         String sqlQuery = """
@@ -39,11 +39,13 @@ public class VentanaBuscarVenta extends JFrame {
     public void initActionListeners() {
         btnAgregar.addActionListener(e -> {
             int    selectedRow   = tableProductos.getSelectedRow();
-            int    cantidad      = Integer.parseInt(tfCantidad.getText());
             String folioProducto = String.valueOf(tableProductos.getValueAt(selectedRow, 0));
+            String descripcion   = String.valueOf(tableProductos.getValueAt(selectedRow, 1));
+            double precio        = Double.parseDouble(String.valueOf(tableProductos.getValueAt(selectedRow, 4)));
+            int    cantidad      = Integer.parseInt(tfCantidad.getText());
+            int    existencia    = Integer.parseInt(String.valueOf(tableProductos.getValueAt(selectedRow, 5)));
 
-            listaProductos.add(new DetalleVenta(folioProducto, cantidad));
-
+            ventanaPrincipal.agregarProductoVenta(new VentaTienda(folioProducto, descripcion, precio, cantidad, existencia));
 
             tfCantidad.setText("");
             this.dispose();

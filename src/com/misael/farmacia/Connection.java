@@ -154,17 +154,20 @@ public class Connection {
     }
 
     public void insertarVenta(Venta venta) {
-        String sentenciaSQL = "INSERT into venta VALUES(?,?,?,?,?,?)";
-
+        String sentenciaSQL = "INSERT into venta VALUES(null,?,?,?,?,?)";
         try {
+            PreparedStatement statementID = db_connection.prepareStatement("SELECT MAX(id_detalles) FROM venta");
+            ResultSet         resultSet   = statementID.executeQuery();
+            resultSet.next();
+            int idMax = resultSet.getInt(1);
+
             PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
 
-            preparedStatement.setString(1, null);
-            preparedStatement.setTimestamp(2, venta.getFecha());
-            preparedStatement.setString(3, venta.getIdDetalles());
-            preparedStatement.setString(4, venta.getIdEmpleado());
-            preparedStatement.setDouble(5, venta.getTotalAPagar());
-            preparedStatement.setDouble(6, venta.getTotalPagado());
+            preparedStatement.setTimestamp(1, venta.getFecha());
+            preparedStatement.setInt(2, idMax + 1);
+            preparedStatement.setString(3, venta.getIdEmpleado());
+            preparedStatement.setDouble(4, venta.getTotalAPagar());
+            preparedStatement.setDouble(5, venta.getTotalPagado());
 
             int filasAfectadas = preparedStatement.executeUpdate();
 
@@ -176,15 +179,19 @@ public class Connection {
     }
 
     public void insertarDetalleVenta(DetalleVenta detalleVenta) {
-        String sentenciaSQL = "INSERT into detalle_venta VALUES(?,?,?,?)";
+        String sentenciaSQL = "INSERT into detalle_venta VALUES(NULL,?,?,?)";
 
         try {
+            PreparedStatement statementID = db_connection.prepareStatement("SELECT MAX(id_detalles) FROM venta");
+            ResultSet         resultSet   = statementID.executeQuery();
+            resultSet.next();
+            int idMax = resultSet.getInt(1);
+
             PreparedStatement preparedStatement = db_connection.prepareStatement(sentenciaSQL);
 
-            preparedStatement.setString(1, null);
-            preparedStatement.setString(2, detalleVenta.getIdDetalles());
-            preparedStatement.setString(3, detalleVenta.getFolioProducto());
-            preparedStatement.setInt(4, detalleVenta.getCantidad());
+            preparedStatement.setInt(1, idMax);
+            preparedStatement.setString(2, detalleVenta.getFolioProducto());
+            preparedStatement.setInt(3, detalleVenta.getCantidad());
 
             int filasAfectadas = preparedStatement.executeUpdate();
 
@@ -546,20 +553,20 @@ public class Connection {
 
     }
 
-    public Object[] obtenerDatos(String sqlQuery){
+    public Object[] obtenerDatos(String sqlQuery) {
         Object[] datos = null;
 
         try {
             PreparedStatement preparedStatement = db_connection.prepareStatement(sqlQuery);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet         resultSet         = preparedStatement.executeQuery();
 
             resultSet.next();
 
             int columnCount = resultSet.getMetaData().getColumnCount();
             datos = new Object[columnCount];
 
-            for (int i = 1; i <= columnCount ; i++) {
-                datos[i-1] = resultSet.getString(i);
+            for (int i = 1; i <= columnCount; i++) {
+                datos[i - 1] = resultSet.getString(i);
             }
 
         } catch (SQLException e) {

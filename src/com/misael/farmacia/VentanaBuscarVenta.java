@@ -45,7 +45,7 @@ public class VentanaBuscarVenta extends JFrame {
             int    cantidad      = Integer.parseInt(tfCantidad.getText());
             int    existencia    = Integer.parseInt(String.valueOf(tableProductos.getValueAt(selectedRow, 5)));
 
-            ventanaPrincipal.agregarProductoVenta(new VentaTienda(folioProducto, descripcion, precio, cantidad, existencia));
+            ventanaPrincipal.agregarProductoTablaVenta(new VentaTienda(folioProducto, descripcion, precio, cantidad, existencia));
 
             tfCantidad.setText("");
             this.dispose();

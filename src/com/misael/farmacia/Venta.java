@@ -5,10 +5,10 @@ import java.sql.Timestamp;
 public class Venta {
 
     private Timestamp fecha;
-    private String idDetalles;
-    private String idEmpleado;
-    private Double totalAPagar;
-    private Double totalPagado;
+    private int       idDetalles;
+    private String    idEmpleado;
+    private Double    totalAPagar;
+    private Double    totalPagado;
 
     public Timestamp getFecha() {
         return fecha;
@@ -18,11 +18,11 @@ public class Venta {
         this.fecha = fecha;
     }
 
-    public String getIdDetalles() {
+    public int getIdDetalles() {
         return idDetalles;
     }
 
-    public void setIdDetalles(String idDetalles) {
+    public void setIdDetalles(int idDetalles) {
         this.idDetalles = idDetalles;
     }
 
@@ -53,7 +53,14 @@ public class Venta {
     public Venta() {
     }
 
-    public Venta(Timestamp fecha, String idDetalles, String idEmpleado, Double totalAPagar, Double totalPagado) {
+    public Venta(String idEmpleado, Double totalAPagar, Double totalPagado) {
+        this.fecha       = new Timestamp(System.currentTimeMillis());
+        this.idEmpleado  = idEmpleado;
+        this.totalAPagar = totalAPagar;
+        this.totalPagado = totalPagado;
+    }
+
+    public Venta(Timestamp fecha, int idDetalles, String idEmpleado, Double totalAPagar, Double totalPagado) {
         this.fecha       = fecha;
         this.idDetalles  = idDetalles;
         this.idEmpleado  = idEmpleado;

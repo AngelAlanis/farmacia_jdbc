@@ -1,18 +1,12 @@
 package com.misael.farmacia;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import org.jdatepicker.*;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
-import org.jdatepicker.impl.UtilDateModel;
 
-import javax.sound.midi.Soundbank;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -552,7 +546,7 @@ public class VentanaPrincipal extends JFrame {
         });
 
         btnCobrar.addActionListener(e -> {
-            System.out.println(ventanaBuscarVenta.listaProductos.toString());
+
         });
 
     }
@@ -697,7 +691,7 @@ public class VentanaPrincipal extends JFrame {
         tablaAbastecimientos.setModel(new DefaultTableModel(data, columnasAbastecimientos));
     }
 
-    public void agregarProductoVenta(VentaTienda ventaTienda) {
+    public void agregarProductoTablaVenta(VentaTienda ventaTienda) {
         ((DefaultTableModel) tableVenta.getModel()).addRow(ventaTienda.getValores());
     }
 

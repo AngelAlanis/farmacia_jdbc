@@ -546,12 +546,10 @@ public class VentanaPrincipal extends JFrame {
         });
 
         btnCobrar.addActionListener(e -> {
-            totalAPagar = 100;
-            totalPagado = 100;
-            Venta venta = new Venta("AMAH01", totalAPagar, totalPagado);
 
-            connection.insertarVenta(venta);
+            totalPagado = Double.parseDouble(JOptionPane.showInputDialog(null, "Ingrese la cantidad del cliente."));
 
+            connection.insertarVenta(new Venta("AMAH01", totalAPagar, totalPagado));
             int totalProductos = tableVenta.getRowCount();
 
             for (int i = 0; i < totalProductos; i++) {
@@ -560,8 +558,10 @@ public class VentanaPrincipal extends JFrame {
                 connection.insertarDetalleVenta(new DetalleVenta(folioProducto, cantidad));
             }
 
+            totalAPagar = 0;
+            totalPagado = 0;
+            labelCostoTotal.setText("$0");
         });
-
     }
 
     public void inicializarIconos() {
@@ -706,6 +706,10 @@ public class VentanaPrincipal extends JFrame {
 
     public void agregarProductoTablaVenta(VentaTienda ventaTienda) {
         ((DefaultTableModel) tableVenta.getModel()).addRow(ventaTienda.getValores());
+
+        totalAPagar += ventaTienda.getImporte();
+
+        labelCostoTotal.setText("$" + totalAPagar);
     }
 
     public VentanaPrincipal() {

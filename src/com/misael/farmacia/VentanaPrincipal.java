@@ -562,9 +562,13 @@ public class VentanaPrincipal extends JFrame {
                 connection.insertarDetalleVenta(new DetalleVenta(folioProducto, cantidad));
             }
 
+            JOptionPane.showMessageDialog(null, "Transacción exitosa");
+
             totalAPagar = 0;
             totalPagado = 0;
             labelCostoTotal.setText("$0");
+            actualizarTablaHistorialVentas();
+            tableVenta.setModel(new DefaultTableModel(null, columnasVenta));
         });
 
         btnUsuario.addActionListener(new ActionListener() {

@@ -83,6 +83,7 @@ public class VentanaPrincipal extends JFrame {
     private Utilidades         utilidades;
     private Connection         connection;
     private VentanaBuscarVenta ventanaBuscarVenta;
+    private boolean            vistaAdmin;
 
     private double totalAPagar;
     private double totalPagado;
@@ -712,9 +713,10 @@ public class VentanaPrincipal extends JFrame {
         labelCostoTotal.setText("$" + totalAPagar);
     }
 
-    public VentanaPrincipal() {
-        utilidades = new Utilidades();
-        connection = new Connection();
+    public VentanaPrincipal(Connection connection, boolean vistaAdmin) {
+        utilidades      = new Utilidades();
+        this.vistaAdmin = vistaAdmin;
+        this.connection = connection;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1366, 728);

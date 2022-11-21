@@ -8,7 +8,6 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Vector;
 
 public class Connection {
@@ -503,6 +502,40 @@ public class Connection {
 
     // Consultas
 
+    public boolean inicioCorrecto(String usuario, String password) {
+        boolean encontrado = false;
+        String  sqlQuery   = "SELECT * FROM usuario WHERE usuario = ? AND contraseña = ?";
+
+        try {
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sqlQuery);
+
+            preparedStatement.setString(1, usuario);
+            preparedStatement.setString(2, password);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            encontrado = resultSet.next();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return encontrado;
+    }
+
+    public boolean isAdmin(String usuario) {
+        String  sqlQuery = "SELECT es_admin FROM usuario WHERE usuario = ?";
+        boolean isAdmin  = false;
+        try {
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sqlQuery);
+            preparedStatement.setString(1, usuario);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            isAdmin = resultSet.getBoolean(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isAdmin;
+    }
+
     public void realizarConsulta(String SQLQuery) {
         JTable      tablaConsultas = new JTable();
         JScrollPane jScrollPane    = new JScrollPane(tablaConsultas);
@@ -580,5 +613,6 @@ public class Connection {
     public Connection() {
         connect();
     }
+
 
 }

@@ -7,6 +7,8 @@ import org.jdatepicker.impl.SqlDateModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
@@ -563,6 +565,14 @@ public class VentanaPrincipal extends JFrame {
             totalPagado = 0;
             labelCostoTotal.setText("$0");
         });
+
+        btnUsuario.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VentanaInicioSesion ventanaInicioSesion = new VentanaInicioSesion(connection);
+                dispose();
+            }
+        });
     }
 
     public void inicializarIconos() {
@@ -594,10 +604,6 @@ public class VentanaPrincipal extends JFrame {
         actualizarTablaHistorialVentas();
         actualizarTablaAbastecimientos();
 
-        //panelPieProductos.remove(btnAgregarProducto);
-        //panelPieProductos.remove(btnModificarProducto);
-        //panelPieProductos.remove(btnEliminarProducto);
-
         //Iconos de las pestañas del tabbedPane
         tabbedPane.setIconAt(0, iconoVenta);
         tabbedPane.setIconAt(1, iconoInventario);
@@ -606,10 +612,34 @@ public class VentanaPrincipal extends JFrame {
         tabbedPane.setIconAt(4, iconoHistorialVentas);
         tabbedPane.setIconAt(5, iconoAbastecimientos);
 
-        //tabbedPane.remove(panelEmpleados);
-        //tabbedPane.remove(panelProveedores);
-        //tabbedPane.remove(panelHistorialVentas);
-        //tabbedPane.remove(panelAbastecimientos);
+
+    }
+
+    public void mostrarVistaAdmin() {
+        tabbedPane.add(panelEmpleados);
+        tabbedPane.add(panelProveedores);
+        tabbedPane.add(panelHistorialVentas);
+        tabbedPane.add(panelAbastecimientos);
+
+        panelPieProductos.add(btnAgregarProducto);
+        panelPieProductos.add(btnModificarProducto);
+        panelPieProductos.add(btnEliminarProducto);
+
+        btnUsuario.setText("Usuario");
+
+    }
+
+    public void mostrarVistaUsuario() {
+        tabbedPane.remove(panelEmpleados);
+        tabbedPane.remove(panelProveedores);
+        tabbedPane.remove(panelHistorialVentas);
+        tabbedPane.remove(panelAbastecimientos);
+
+        panelPieProductos.remove(btnAgregarProducto);
+        panelPieProductos.remove(btnModificarProducto);
+        panelPieProductos.remove(btnEliminarProducto);
+
+        btnUsuario.setText("Usuario");
     }
 
     public Vector<Vector<Object>> obtenerDatosTabla(String sqlQuery) {
@@ -728,6 +758,11 @@ public class VentanaPrincipal extends JFrame {
         inicializarIconos();
         configurarComponentes();
         initActionListeners();
+
+        if (!vistaAdmin) {
+            mostrarVistaUsuario();
+        }
+
         setVisible(true);
     }
 }

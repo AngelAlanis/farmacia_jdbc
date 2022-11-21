@@ -25,7 +25,11 @@ public class VentanaInicioSesion extends JFrame {
         btnIngresar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                connection = new Connection();
+
+                if (connection == null) {
+                    connection = new Connection();
+                }
+
                 String usuario  = tfUsuario.getText();
                 String password = String.valueOf(tfContraseña.getPassword());
 
@@ -42,9 +46,10 @@ public class VentanaInicioSesion extends JFrame {
         });
     }
 
-    public VentanaInicioSesion() {
-        hasAccess = false;
-        isAdmin   = false;
+    public VentanaInicioSesion(Connection connection) {
+        hasAccess       = false;
+        isAdmin         = false;
+        this.connection = connection;
         setTitle("Inicio de sesión");
         setSize(480, 600);
         setContentPane(panelPrincipal);

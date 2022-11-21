@@ -9,7 +9,7 @@ public class Launcher {
 
     public static void main(String[] args) {
         FlatDarkLaf.setup();
-        VentanaInicioSesion ventanaInicioSesion = new VentanaInicioSesion();
+        VentanaInicioSesion ventanaInicioSesion = new VentanaInicioSesion(null);
 
     }
 

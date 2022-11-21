@@ -19,6 +19,7 @@ public class VentanaInicioSesion extends JFrame {
     private JButton        btnIngresar;
     private boolean        isAdmin;
     private boolean        hasAccess;
+    private String         idEmpleado;
     Connection connection;
 
     public void initActionListeners() {
@@ -33,14 +34,15 @@ public class VentanaInicioSesion extends JFrame {
                 String usuario  = tfUsuario.getText();
                 String password = String.valueOf(tfContraseña.getPassword());
 
-                boolean inicioCorrecto = connection.inicioCorrecto(usuario, password);
+                hasAccess = connection.inicioCorrecto(usuario, password);
 
-                if (inicioCorrecto) {
+                if (hasAccess) {
                     isAdmin = connection.isAdmin(usuario);
-                    VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(connection, isAdmin);
+                    idEmpleado = connection.getIdEmpleado(usuario);
+                    VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(connection, isAdmin, idEmpleado);
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Incorrecto");
+                    JOptionPane.showMessageDialog(null, "Datos de inicio de sesión incorrectos o no existen", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

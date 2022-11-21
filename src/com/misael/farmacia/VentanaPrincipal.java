@@ -86,6 +86,7 @@ public class VentanaPrincipal extends JFrame {
     private Connection         connection;
     private VentanaBuscarVenta ventanaBuscarVenta;
     private boolean            vistaAdmin;
+    private String             idEmpleado;
 
     private double totalAPagar;
     private double totalPagado;
@@ -569,8 +570,12 @@ public class VentanaPrincipal extends JFrame {
         btnUsuario.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VentanaInicioSesion ventanaInicioSesion = new VentanaInicioSesion(connection);
-                dispose();
+                int confirmacion = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea cambiar de usuario?", "Cambio de usuario", JOptionPane.OK_CANCEL_OPTION);
+
+                if (confirmacion == JOptionPane.OK_OPTION) {
+                    VentanaInicioSesion ventanaInicioSesion = new VentanaInicioSesion(connection);
+                    dispose();
+                }
             }
         });
     }
@@ -586,6 +591,8 @@ public class VentanaPrincipal extends JFrame {
     }
 
     public void configurarComponentes() {
+        btnUsuario.setText(idEmpleado);
+
         //Botón de salir en el tabbedPane
         trailing = new JToolBar();
         btnSalir = new JButton("Salir");
@@ -624,9 +631,6 @@ public class VentanaPrincipal extends JFrame {
         panelPieProductos.add(btnAgregarProducto);
         panelPieProductos.add(btnModificarProducto);
         panelPieProductos.add(btnEliminarProducto);
-
-        btnUsuario.setText("Usuario");
-
     }
 
     public void mostrarVistaUsuario() {
@@ -638,8 +642,6 @@ public class VentanaPrincipal extends JFrame {
         panelPieProductos.remove(btnAgregarProducto);
         panelPieProductos.remove(btnModificarProducto);
         panelPieProductos.remove(btnEliminarProducto);
-
-        btnUsuario.setText("Usuario");
     }
 
     public Vector<Vector<Object>> obtenerDatosTabla(String sqlQuery) {
@@ -743,10 +745,11 @@ public class VentanaPrincipal extends JFrame {
         labelCostoTotal.setText("$" + totalAPagar);
     }
 
-    public VentanaPrincipal(Connection connection, boolean vistaAdmin) {
+    public VentanaPrincipal(Connection connection, boolean vistaAdmin, String idEmpleado) {
         utilidades      = new Utilidades();
         this.vistaAdmin = vistaAdmin;
         this.connection = connection;
+        this.idEmpleado = idEmpleado;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1366, 728);

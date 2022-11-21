@@ -536,6 +536,23 @@ public class Connection {
         return isAdmin;
     }
 
+    public String getIdEmpleado(String usuario) {
+        String sqlQuery   = "SELECT id_empleado FROM usuario WHERE usuario = ?";
+        String idEmpleado = null;
+        try {
+            PreparedStatement preparedStatement = db_connection.prepareStatement(sqlQuery);
+            preparedStatement.setString(1, usuario);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            idEmpleado = resultSet.getString(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return idEmpleado;
+    }
+
+
     public void realizarConsulta(String SQLQuery) {
         JTable      tablaConsultas = new JTable();
         JScrollPane jScrollPane    = new JScrollPane(tablaConsultas);

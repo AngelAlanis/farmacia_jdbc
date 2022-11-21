@@ -3,6 +3,8 @@ package com.misael.farmacia;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +23,7 @@ public class VentanaInicioSesion extends JFrame {
     private boolean        hasAccess;
     private String         idEmpleado;
     Connection connection;
+    Utilidades utilidades = new Utilidades();
 
     public void initActionListeners() {
         btnIngresar.addActionListener(new ActionListener() {
@@ -31,13 +34,13 @@ public class VentanaInicioSesion extends JFrame {
                     connection = new Connection();
                 }
 
-                String usuario  = tfUsuario.getText();
-                String password = String.valueOf(tfContraseña.getPassword());
+                String usuario  = utilidades.verificarTexto(tfUsuario.getText());
+                String password = utilidades.verificarTexto(String.valueOf(tfContraseña.getPassword()));
 
                 hasAccess = connection.inicioCorrecto(usuario, password);
 
                 if (hasAccess) {
-                    isAdmin = connection.isAdmin(usuario);
+                    isAdmin    = connection.isAdmin(usuario);
                     idEmpleado = connection.getIdEmpleado(usuario);
                     VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(connection, isAdmin, idEmpleado);
                     dispose();
@@ -46,7 +49,26 @@ public class VentanaInicioSesion extends JFrame {
                 }
             }
         });
+
+        tfContraseña.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
     }
+
 
     public VentanaInicioSesion(Connection connection) {
         hasAccess       = false;
@@ -55,6 +77,7 @@ public class VentanaInicioSesion extends JFrame {
         setTitle("Inicio de sesión");
         setSize(480, 600);
         setContentPane(panelPrincipal);
+        getRootPane().setDefaultButton(btnIngresar);
         initActionListeners();
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);

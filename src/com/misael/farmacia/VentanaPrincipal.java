@@ -553,7 +553,7 @@ public class VentanaPrincipal extends JFrame {
 
             totalPagado = Double.parseDouble(JOptionPane.showInputDialog(null, "Ingrese la cantidad del cliente."));
 
-            connection.insertarVenta(new Venta("AMAH01", totalAPagar, totalPagado));
+            connection.insertarVenta(new Venta(idEmpleado, totalAPagar, totalPagado));
             int totalProductos = tableVenta.getRowCount();
 
             for (int i = 0; i < totalProductos; i++) {
@@ -618,8 +618,6 @@ public class VentanaPrincipal extends JFrame {
         tabbedPane.setIconAt(3, iconoProveedores);
         tabbedPane.setIconAt(4, iconoHistorialVentas);
         tabbedPane.setIconAt(5, iconoAbastecimientos);
-
-
     }
 
     public void mostrarVistaAdmin() {

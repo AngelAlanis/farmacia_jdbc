@@ -91,12 +91,14 @@ public class VentanaPrincipal extends JFrame {
     private double totalAPagar;
     private double totalPagado;
 
-    private final Vector<String> columnasProductos       = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Clave Proveedor", "Nombre proveedor", "Precio", "Existencia"));
-    private final Vector<String> columnasVenta           = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Precio de venta", "Cantidad", "Importe", "Existencia"));
-    private final Vector<String> columnasEmpleados       = new Vector<>(Arrays.asList("ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"));
-    private final Vector<String> columnasProvedores      = new Vector<>(Arrays.asList("Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"));
-    private final Vector<String> columnasHistorialVentas = new Vector<>(Arrays.asList("Folio Venta", "Fecha", "ID Detalles", "ID Empleado", "Nombre empleado", "Importe", "Total pagado"));
-    private final Vector<String> columnasAbastecimientos = new Vector<>(Arrays.asList("Clave", "Fecha", "Clave Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"));
+    private final Vector<String> columnasProductos               = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Clave Proveedor", "Nombre proveedor", "Precio", "Existencia"));
+    private final Vector<String> columnasVenta                   = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Precio de venta", "Cantidad", "Importe", "Existencia"));
+    private final Vector<String> columnasEmpleados               = new Vector<>(Arrays.asList("ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"));
+    private final Vector<String> columnasProvedores              = new Vector<>(Arrays.asList("Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"));
+    private final Vector<String> columnasHistorialVentas         = new Vector<>(Arrays.asList("Folio Venta", "Fecha", "ID Detalles", "ID Empleado", "Nombre empleado", "Importe", "Total pagado"));
+    private final Vector<String> columnasAbastecimientos         = new Vector<>(Arrays.asList("Clave", "Fecha", "Clave Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"));
+    private final Vector<String> columnasDetallesVenta           = new Vector<>(Arrays.asList("Folio", "ID Detalles", "Folio Producto", "Descripción", "Cantidad"));
+    private final Vector<String> columnasDetallesAbastecimientos = new Vector<>(Arrays.asList("Folio", "ID Detalles", "Folio Producto", "Descripcion", "Abastecimiento", "Cantidad"));
 
     private ArrayList<Proveedor> proveedores = new ArrayList<>();
 
@@ -497,10 +499,11 @@ public class VentanaPrincipal extends JFrame {
 
             sentenciaSQL += idDetalles;
 
-            System.out.println(sentenciaSQL);
             JTable      tablaDetalles = new JTable();
             JScrollPane spDetalles    = new JScrollPane(tablaDetalles);
-            tablaDetalles.setModel(connection.fillTable(sentenciaSQL));
+
+            Vector<Vector<Object>> data = obtenerDatosTabla(sentenciaSQL);
+            tablaDetalles.setModel(new DefaultTableModel(data, columnasDetallesVenta));
 
             Object[] interfaz = {
                     new JLabel("Detalles venta"),
@@ -526,10 +529,11 @@ public class VentanaPrincipal extends JFrame {
 
             sentenciaSQL += idDetalles;
 
-            System.out.println(sentenciaSQL);
             JTable      tablaDetalles = new JTable();
             JScrollPane spDetalles    = new JScrollPane(tablaDetalles);
-            tablaDetalles.setModel(connection.fillTable(sentenciaSQL));
+
+            Vector<Vector<Object>> data = obtenerDatosTabla(sentenciaSQL);
+            tablaDetalles.setModel(new DefaultTableModel(data, columnasDetallesAbastecimientos));
 
             Object[] interfaz = {
                     new JLabel("Detalles abastecimiento"),
@@ -568,6 +572,7 @@ public class VentanaPrincipal extends JFrame {
             totalPagado = 0;
             labelCostoTotal.setText("$0");
             actualizarTablaHistorialVentas();
+            actualizarTablaProductos();
             tableVenta.setModel(new DefaultTableModel(null, columnasVenta));
         });
 

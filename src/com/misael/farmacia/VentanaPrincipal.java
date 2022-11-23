@@ -554,19 +554,27 @@ public class VentanaPrincipal extends JFrame {
         });
 
         btnCobrar.addActionListener(e -> {
+            ArrayList<VentaTienda> listaProductos = new ArrayList<>();
 
             totalPagado = Double.parseDouble(JOptionPane.showInputDialog(null, "Ingrese la cantidad del cliente."));
+            //connection.insertarVenta(new Venta(idEmpleado, totalAPagar, totalPagado));
 
-            connection.insertarVenta(new Venta(idEmpleado, totalAPagar, totalPagado));
             int totalProductos = tableVenta.getRowCount();
+            int numeroTicket = connection.getFolioVentaMasAlto();
 
             for (int i = 0; i < totalProductos; i++) {
                 String folioProducto = String.valueOf(tableVenta.getValueAt(i, 0));
+                String descripcion   = String.valueOf(tableVenta.getValueAt(i, 1));
+                double precio        = Double.parseDouble(String.valueOf(tableVenta.getValueAt(i, 2)));
                 int    cantidad      = Integer.parseInt(String.valueOf(tableVenta.getValueAt(i, 3)));
-                connection.insertarDetalleVenta(new DetalleVenta(folioProducto, cantidad));
+                //connection.insertarDetalleVenta(new DetalleVenta(folioProducto, cantidad));
+
+                listaProductos.add(new VentaTienda(descripcion, precio, cantidad));
             }
 
             JOptionPane.showMessageDialog(null, "Transacción exitosa");
+
+            Ticket ticket = new Ticket(listaProductos, totalAPagar, totalPagado, numeroTicket);
 
             totalAPagar = 0;
             totalPagado = 0;

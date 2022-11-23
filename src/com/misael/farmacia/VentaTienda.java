@@ -72,6 +72,13 @@ public class VentaTienda {
     public VentaTienda() {
     }
 
+    public VentaTienda(String descripcion, double precio, int cantidad) {
+        this.descripcion = descripcion;
+        this.precio      = precio;
+        this.cantidad    = cantidad;
+        this.importe     = precio * cantidad;
+    }
+
     public VentaTienda(String folioProducto, String descripcion, double precio, int cantidad, int existencia) {
         this.folioProducto = folioProducto;
         this.descripcion   = descripcion;

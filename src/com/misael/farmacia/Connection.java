@@ -552,6 +552,20 @@ public class Connection {
         return idEmpleado;
     }
 
+    public int getFolioVentaMasAlto() {
+        int idMax = 0;
+        try {
+            PreparedStatement statementID = db_connection.prepareStatement("SELECT MAX(folio_venta) FROM venta");
+            ResultSet         resultSet   = statementID.executeQuery();
+            resultSet.next();
+            idMax = resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return idMax;
+    }
+
 
     public void realizarConsulta(String SQLQuery) {
         JTable      tablaConsultas = new JTable();

@@ -3,6 +3,7 @@ package com.misael.farmacia;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -56,10 +57,21 @@ public class VentanaBuscarVenta extends JFrame {
 
         btnAgregar.addActionListener(e -> {
             int    selectedRow   = tableProductos.getSelectedRow();
-            String folioProducto = String.valueOf(tableProductos.getValueAt(selectedRow, 0));
-            String descripcion   = String.valueOf(tableProductos.getValueAt(selectedRow, 1));
-            double precio        = Double.parseDouble(String.valueOf(tableProductos.getValueAt(selectedRow, 2)));
-            int    cantidad      = Integer.parseInt(tfCantidad.getText());
+
+            String folioProducto = null;
+            String descripcion   = null;
+            double precio        = 0;
+            int    cantidad      = 0;
+
+            try {
+                folioProducto = String.valueOf(tableProductos.getValueAt(selectedRow, 0));
+                descripcion   = String.valueOf(tableProductos.getValueAt(selectedRow, 1));
+                precio        = Double.parseDouble(String.valueOf(tableProductos.getValueAt(selectedRow, 2)));
+                cantidad      = Integer.parseInt(tfCantidad.getText());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Asegúrate de seleccionar un producto y escribir la cantidad.");
+                return;
+            }
 
             ventanaPrincipal.agregarProductoTablaVenta(new VentaTienda(folioProducto, descripcion, precio, cantidad));
 

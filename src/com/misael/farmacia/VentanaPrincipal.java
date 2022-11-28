@@ -124,7 +124,6 @@ public class VentanaPrincipal extends JFrame {
 
         //Productos
         btnAgregarProducto.addActionListener(e -> {
-            JTextField           tfFolio       = new JTextField();
             JTextField           tfDescripcion = new JTextField();
             JComboBox<Proveedor> cbProveedor   = new JComboBox();
             JTextField           tfPrecio      = new JTextField();
@@ -134,8 +133,6 @@ public class VentanaPrincipal extends JFrame {
 
             Object[] interfaz = {
                     new JLabel("Agregar producto"),
-                    new JLabel("Folio"),
-                    tfFolio,
                     new JLabel("Descripción"),
                     tfDescripcion,
                     new JLabel("Proveedor"),
@@ -152,7 +149,9 @@ public class VentanaPrincipal extends JFrame {
                 try {
                     Producto producto  = new Producto();
                     String[] proveedor = cbProveedor.getSelectedItem().toString().split("-", 2);
-                    producto.setFolioProducto(utilidades.verificarTexto(tfFolio.getText()));
+
+                    int nuevoFolio = connection.getValorMasAlto("folio_producto", "producto") + 1;
+                    producto.setFolioProducto(String.valueOf(nuevoFolio));
                     producto.setDescripcion(utilidades.verificarTexto(tfDescripcion.getText()));
                     producto.setIdProveedor(proveedor[0]);
                     producto.setPrecio(Double.parseDouble(utilidades.verificarTexto(tfPrecio.getText())));

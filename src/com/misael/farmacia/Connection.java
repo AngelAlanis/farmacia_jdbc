@@ -557,6 +557,19 @@ public class Connection {
         return idEmpleado;
     }
 
+    public int getValorMasAlto(String columna, String tabla) {
+        int idMax = 0;
+        try {
+            PreparedStatement statementID = db_connection.prepareStatement("SELECT MAX(" + columna + ") FROM " + tabla);
+            ResultSet resultSet = statementID.executeQuery();
+            resultSet.next();
+            idMax = resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return idMax;
+    }
+
     public int getFolioVentaMasAlto() {
         int idMax = 0;
         try {

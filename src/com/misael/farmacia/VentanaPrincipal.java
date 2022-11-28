@@ -5,13 +5,29 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Properties;
+import java.util.Vector;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -92,7 +108,7 @@ public class VentanaPrincipal extends JFrame {
     private double totalPagado;
 
     private final Vector<String> columnasProductos               = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Clave Proveedor", "Nombre proveedor", "Precio", "Existencia"));
-    private final Vector<String> columnasVenta                   = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Precio de venta", "Cantidad", "Importe", "Existencia"));
+    private final Vector<String> columnasVenta                   = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Precio de venta", "Cantidad", "Importe"));
     private final Vector<String> columnasEmpleados               = new Vector<>(Arrays.asList("ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"));
     private final Vector<String> columnasProvedores              = new Vector<>(Arrays.asList("Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"));
     private final Vector<String> columnasHistorialVentas         = new Vector<>(Arrays.asList("Folio Venta", "Fecha", "ID Detalles", "ID Empleado", "Nombre empleado", "Importe", "Total pagado"));
@@ -502,7 +518,7 @@ public class VentanaPrincipal extends JFrame {
             JTable      tablaDetalles = new JTable();
             JScrollPane spDetalles    = new JScrollPane(tablaDetalles);
 
-            Vector<Vector<Object>> data = obtenerDatosTabla(sentenciaSQL);
+            Vector<Vector<Object>> data = connection.obtenerDatosTabla(sentenciaSQL);
             tablaDetalles.setModel(new DefaultTableModel(data, columnasDetallesVenta));
 
             Object[] interfaz = {
@@ -532,7 +548,7 @@ public class VentanaPrincipal extends JFrame {
             JTable      tablaDetalles = new JTable();
             JScrollPane spDetalles    = new JScrollPane(tablaDetalles);
 
-            Vector<Vector<Object>> data = obtenerDatosTabla(sentenciaSQL);
+            Vector<Vector<Object>> data = connection.obtenerDatosTabla(sentenciaSQL);
             tablaDetalles.setModel(new DefaultTableModel(data, columnasDetallesAbastecimientos));
 
             Object[] interfaz = {
@@ -557,17 +573,17 @@ public class VentanaPrincipal extends JFrame {
             ArrayList<VentaTienda> listaProductos = new ArrayList<>();
 
             totalPagado = Double.parseDouble(JOptionPane.showInputDialog(null, "Ingrese la cantidad del cliente."));
-            //connection.insertarVenta(new Venta(idEmpleado, totalAPagar, totalPagado));
+            connection.insertarVenta(new Venta(idEmpleado, totalAPagar, totalPagado));
 
             int totalProductos = tableVenta.getRowCount();
-            int numeroTicket = connection.getFolioVentaMasAlto();
+            int numeroTicket   = connection.getFolioVentaMasAlto();
 
             for (int i = 0; i < totalProductos; i++) {
                 String folioProducto = String.valueOf(tableVenta.getValueAt(i, 0));
                 String descripcion   = String.valueOf(tableVenta.getValueAt(i, 1));
                 double precio        = Double.parseDouble(String.valueOf(tableVenta.getValueAt(i, 2)));
                 int    cantidad      = Integer.parseInt(String.valueOf(tableVenta.getValueAt(i, 3)));
-                //connection.insertarDetalleVenta(new DetalleVenta(folioProducto, cantidad));
+                connection.insertarDetalleVenta(new DetalleVenta(folioProducto, cantidad));
 
                 listaProductos.add(new VentaTienda(descripcion, precio, cantidad));
             }
@@ -593,6 +609,48 @@ public class VentanaPrincipal extends JFrame {
                     VentanaInicioSesion ventanaInicioSesion = new VentanaInicioSesion(connection);
                     dispose();
                 }
+            }
+        });
+
+        //Filtrar en búsquedas
+
+        tfBusquedaAbastecimiento.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                String busqueda = tfBusquedaAbastecimiento.getText();
+                utilidades.filtrarLista(busqueda, tablaAbastecimientos);
+            }
+        });
+
+        tfBusquedaEmpleado.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                String busqueda = tfBusquedaEmpleado.getText();
+                utilidades.filtrarLista(busqueda, tablaEmpleados);
+            }
+        });
+
+        tfBusquedaHistorialVentas.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                String busqueda = tfBusquedaHistorialVentas.getText();
+                utilidades.filtrarLista(busqueda, tablaHistorialVentas);
+            }
+        });
+
+        tfBusquedaProducto.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                String busqueda = tfBusquedaProducto.getText();
+                utilidades.filtrarLista(busqueda, tablaProductos);
+            }
+        });
+
+        tfBusquedaProveedor.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                String busqueda = tfBusquedaProveedor.getText();
+                utilidades.filtrarLista(busqueda, tablaProveedores);
             }
         });
     }
@@ -659,37 +717,6 @@ public class VentanaPrincipal extends JFrame {
         panelPieProductos.remove(btnEliminarProducto);
     }
 
-    public Vector<Vector<Object>> obtenerDatosTabla(String sqlQuery) {
-        Vector<Vector<Object>> data = new Vector<>();
-        int                    columns;
-
-        try {
-            Statement statement = connection.db_connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-
-            columns = resultSet.getMetaData().getColumnCount();
-
-            while (resultSet.next()) {
-                Vector<Object> row = new Vector<>();
-
-                for (int i = 1; i <= columns; i++) {
-                    row.add(resultSet.getObject(i));
-                }
-
-                data.add(row);
-            }
-
-            resultSet.close();
-            statement.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return data;
-
-    }
-
     public JDatePickerImpl generarCalendario() {
         SqlDateModel dateModel  = new SqlDateModel();
         Properties   properties = new Properties();
@@ -709,19 +736,19 @@ public class VentanaPrincipal extends JFrame {
                 WHERE producto.id_proveedor = proveedor.proveedor_clave
                 ORDER BY producto.folio_producto;
                 """;
-        Vector<Vector<Object>> data = obtenerDatosTabla(sqlQuery);
+        Vector<Vector<Object>> data = connection.obtenerDatosTabla(sqlQuery);
         tablaProductos.setModel(new DefaultTableModel(data, columnasProductos));
     }
 
     public void actualizarTablaEmpleados() {
         String                 sqlQuery = "SELECT * FROM empleado";
-        Vector<Vector<Object>> data     = obtenerDatosTabla(sqlQuery);
+        Vector<Vector<Object>> data     = connection.obtenerDatosTabla(sqlQuery);
         tablaEmpleados.setModel(new DefaultTableModel(data, columnasEmpleados));
     }
 
     public void actualizarTablaProveedores() {
         String                 sqlQuery = "SELECT * FROM proveedor";
-        Vector<Vector<Object>> data     = obtenerDatosTabla(sqlQuery);
+        Vector<Vector<Object>> data     = connection.obtenerDatosTabla(sqlQuery);
         tablaProveedores.setModel(new DefaultTableModel(data, columnasProvedores));
 
         // Filas
@@ -740,7 +767,7 @@ public class VentanaPrincipal extends JFrame {
                 FROM venta, empleado
                 WHERE venta.id_empleado = empleado.id_empleado;
                 """;
-        Vector<Vector<Object>> data = obtenerDatosTabla(sqlQuery);
+        Vector<Vector<Object>> data = connection.obtenerDatosTabla(sqlQuery);
         tablaHistorialVentas.setModel(new DefaultTableModel(data, columnasHistorialVentas));
     }
 
@@ -748,7 +775,7 @@ public class VentanaPrincipal extends JFrame {
         String sqlQuery = """
                 SELECT * FROM abastecimiento;
                 """;
-        Vector<Vector<Object>> data = obtenerDatosTabla(sqlQuery);
+        Vector<Vector<Object>> data = connection.obtenerDatosTabla(sqlQuery);
         tablaAbastecimientos.setModel(new DefaultTableModel(data, columnasAbastecimientos));
     }
 

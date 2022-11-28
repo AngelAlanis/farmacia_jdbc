@@ -6,7 +6,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -566,7 +571,6 @@ public class Connection {
         return idMax;
     }
 
-
     public void realizarConsulta(String SQLQuery) {
         JTable      tablaConsultas = new JTable();
         JScrollPane jScrollPane    = new JScrollPane(tablaConsultas);
@@ -640,6 +644,36 @@ public class Connection {
         return datos;
     }
 
+    public Vector<Vector<Object>> obtenerDatosTabla(String sqlQuery) {
+        Vector<Vector<Object>> data = new Vector<>();
+        int                    columns;
+
+        try {
+            Statement statement = db_connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sqlQuery);
+
+            columns = resultSet.getMetaData().getColumnCount();
+
+            while (resultSet.next()) {
+                Vector<Object> row = new Vector<>();
+
+                for (int i = 1; i <= columns; i++) {
+                    row.add(resultSet.getObject(i));
+                }
+
+                data.add(row);
+            }
+
+            resultSet.close();
+            statement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return data;
+
+    }
 
     public Connection() {
         connect();

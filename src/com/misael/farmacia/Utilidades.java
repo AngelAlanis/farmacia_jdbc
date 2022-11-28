@@ -1,6 +1,10 @@
 package com.misael.farmacia;
 
 import javax.swing.ImageIcon;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.util.Objects;
 
 public class Utilidades {
@@ -15,6 +19,14 @@ public class Utilidades {
         }
 
         return texto;
+    }
+
+    public void filtrarLista(String busqueda, JTable table) {
+        DefaultTableModel                 tableModel = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> trs        = new TableRowSorter<>(tableModel);
+        table.setRowSorter(trs);
+
+        trs.setRowFilter(RowFilter.regexFilter("(?i)" + busqueda));
     }
 
 }

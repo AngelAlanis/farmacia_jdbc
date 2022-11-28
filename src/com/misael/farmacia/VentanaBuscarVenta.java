@@ -7,7 +7,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Vector;
 
 public class VentanaBuscarVenta extends JFrame {
     private JPanel      panelPrincipal;
@@ -24,28 +29,39 @@ public class VentanaBuscarVenta extends JFrame {
 
     ArrayList<VentaTienda> listaProductos;
     VentanaPrincipal       ventanaPrincipal;
+    Utilidades             utilidades;
+    private final Vector<String> columnas = new Vector<>(Arrays.asList("Folio", "Descripción", "Precio"));
 
     public void initComponents() {
         String sqlQuery = """
-                SELECT producto.folio_producto, producto.descripcion, producto.id_proveedor, proveedor.nombre, producto.precio, producto.existencia
-                FROM producto, proveedor
-                WHERE producto.id_proveedor = proveedor.proveedor_clave
-                ORDER BY producto.folio_producto;
+                SELECT folio_producto, descripcion, precio
+                FROM producto
+                ORDER BY folio_producto;
                 """;
 
-        tableProductos.setModel(db_connection.fillTable(sqlQuery));
+        Vector<Vector<Object>> data = db_connection.obtenerDatosTabla(sqlQuery);
+        tableProductos.setModel(new DefaultTableModel(data, columnas));
     }
 
     public void initActionListeners() {
+
+        tfNombreProducto.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                String busqueda = tfNombreProducto.getText();
+                utilidades.filtrarLista(busqueda, tableProductos);
+
+            }
+        });
+
         btnAgregar.addActionListener(e -> {
             int    selectedRow   = tableProductos.getSelectedRow();
             String folioProducto = String.valueOf(tableProductos.getValueAt(selectedRow, 0));
             String descripcion   = String.valueOf(tableProductos.getValueAt(selectedRow, 1));
-            double precio        = Double.parseDouble(String.valueOf(tableProductos.getValueAt(selectedRow, 4)));
+            double precio        = Double.parseDouble(String.valueOf(tableProductos.getValueAt(selectedRow, 2)));
             int    cantidad      = Integer.parseInt(tfCantidad.getText());
-            int    existencia    = Integer.parseInt(String.valueOf(tableProductos.getValueAt(selectedRow, 5)));
 
-            ventanaPrincipal.agregarProductoTablaVenta(new VentaTienda(folioProducto, descripcion, precio, cantidad, existencia));
+            ventanaPrincipal.agregarProductoTablaVenta(new VentaTienda(folioProducto, descripcion, precio, cantidad));
 
             tfCantidad.setText("");
             this.dispose();
@@ -58,6 +74,7 @@ public class VentanaBuscarVenta extends JFrame {
         this.db_connection    = db_connection;
         this.ventanaPrincipal = ventanaPrincipal;
         listaProductos        = new ArrayList<>();
+        utilidades            = new Utilidades();
 
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setContentPane(panelPrincipal);

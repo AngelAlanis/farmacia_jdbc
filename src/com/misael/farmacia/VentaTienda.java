@@ -79,12 +79,11 @@ public class VentaTienda {
         this.importe     = precio * cantidad;
     }
 
-    public VentaTienda(String folioProducto, String descripcion, double precio, int cantidad, int existencia) {
+    public VentaTienda(String folioProducto, String descripcion, double precio, int cantidad) {
         this.folioProducto = folioProducto;
         this.descripcion   = descripcion;
         this.precio        = precio;
         this.cantidad      = cantidad;
         this.importe       = precio * cantidad;
-        this.existencia    = existencia;
     }
 }

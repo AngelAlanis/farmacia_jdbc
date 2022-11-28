@@ -5,6 +5,15 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Properties;
+import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,15 +28,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.Vector;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -44,6 +44,8 @@ public class VentanaPrincipal extends JFrame {
     private JButton     btnAgregarProveedor;
     private JButton     btnBuscar;
     private JButton     btnCobrar;
+    private JButton     btnDetallesAbastecimiento;
+    private JButton     btnDetallesHistorialVentas;
     private JButton     btnEliminar;
     private JButton     btnEliminarEmpleado;
     private JButton     btnEliminarProducto;
@@ -58,6 +60,7 @@ public class VentanaPrincipal extends JFrame {
     private JLabel      labelBuscarProveedor;
     private JLabel      labelBusquedaAbastecimiento;
     private JLabel      labelBusquedaEmpleado;
+    private JLabel      labelBusquedaHistorialVentas;
     private JLabel      labelCantidadProductos;
     private JLabel      labelCostoTotal;
     private JLabel      labelLeAtiende;
@@ -65,6 +68,7 @@ public class VentanaPrincipal extends JFrame {
     private JPanel      panelEmpleados;
     private JPanel      panelEncabezado;
     private JPanel      panelHistorialVentas;
+    private JPanel      panelPieAbastecimientos;
     private JPanel      panelPieEmpleados;
     private JPanel      panelPieProductos;
     private JPanel      panelPieProveedores;
@@ -89,32 +93,28 @@ public class VentanaPrincipal extends JFrame {
     private JTable      tableVenta;
     private JTextField  tfBusquedaAbastecimiento;
     private JTextField  tfBusquedaEmpleado;
+    private JTextField  tfBusquedaHistorialVentas;
     private JTextField  tfBusquedaProducto;
     private JTextField  tfBusquedaProveedor;
-    private JButton     btnDetallesAbastecimiento;
-    private JPanel      panelPieAbastecimientos;
-    private JTextField  tfBusquedaHistorialVentas;
-    private JLabel      labelBusquedaHistorialVentas;
-    private JButton     btnDetallesHistorialVentas;
     private JToolBar    trailing;
 
-    private Utilidades         utilidades;
     private Connection         connection;
+    private String             idEmpleado;
+    private Utilidades         utilidades;
     private VentanaBuscarVenta ventanaBuscarVenta;
     private boolean            vistaAdmin;
-    private String             idEmpleado;
 
     private double totalAPagar;
     private double totalPagado;
 
-    private final Vector<String> columnasProductos               = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Clave Proveedor", "Nombre proveedor", "Precio", "Existencia"));
-    private final Vector<String> columnasVenta                   = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Precio de venta", "Cantidad", "Importe"));
-    private final Vector<String> columnasEmpleados               = new Vector<>(Arrays.asList("ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"));
-    private final Vector<String> columnasProvedores              = new Vector<>(Arrays.asList("Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"));
-    private final Vector<String> columnasHistorialVentas         = new Vector<>(Arrays.asList("Folio Venta", "Fecha", "ID Detalles", "ID Empleado", "Nombre empleado", "Importe", "Total pagado"));
     private final Vector<String> columnasAbastecimientos         = new Vector<>(Arrays.asList("Clave", "Fecha", "Clave Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"));
-    private final Vector<String> columnasDetallesVenta           = new Vector<>(Arrays.asList("Folio", "ID Detalles", "Folio Producto", "Descripción", "Cantidad"));
     private final Vector<String> columnasDetallesAbastecimientos = new Vector<>(Arrays.asList("Folio", "ID Detalles", "Folio Producto", "Descripcion", "Abastecimiento", "Cantidad"));
+    private final Vector<String> columnasDetallesVenta           = new Vector<>(Arrays.asList("Folio", "ID Detalles", "Folio Producto", "Descripción", "Cantidad"));
+    private final Vector<String> columnasEmpleados               = new Vector<>(Arrays.asList("ID Empleado", "Nombre", "Genero", "Fecha de Nacimiento", "Domicilio", "Teléfono", "Correo"));
+    private final Vector<String> columnasHistorialVentas         = new Vector<>(Arrays.asList("Folio Venta", "Fecha", "ID Detalles", "ID Empleado", "Nombre empleado", "Importe", "Total pagado"));
+    private final Vector<String> columnasProductos               = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Clave Proveedor", "Nombre proveedor", "Precio", "Existencia"));
+    private final Vector<String> columnasProvedores              = new Vector<>(Arrays.asList("Clave Proveedor", "Nombre", "Domicilio", "Teléfono", "Correo", "RFC"));
+    private final Vector<String> columnasVenta                   = new Vector<>(Arrays.asList("Folio", "Descripción del producto", "Precio de venta", "Cantidad", "Importe"));
 
     private ArrayList<Proveedor> proveedores = new ArrayList<>();
 

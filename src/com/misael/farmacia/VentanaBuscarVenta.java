@@ -15,17 +15,17 @@ import java.util.Arrays;
 import java.util.Vector;
 
 public class VentanaBuscarVenta extends JFrame {
+    private Connection  db_connection;
+    private JButton     btnAgregar;
+    private JButton     btnCancelar;
+    private JLabel      labeNombreProducto;
+    private JLabel      labelCantidad;
+    private JPanel      panelBotones;
     private JPanel      panelPrincipal;
     private JScrollPane spProductos;
     private JTable      tableProductos;
-    private JTextField  tfNombreProducto;
-    private JLabel      labeNombreProducto;
     private JTextField  tfCantidad;
-    private JLabel      labelCantidad;
-    private JButton     btnAgregar;
-    private JButton     btnCancelar;
-    private JPanel      panelBotones;
-    private Connection  db_connection;
+    private JTextField  tfNombreProducto;
 
     ArrayList<VentaTienda> listaProductos;
     VentanaPrincipal       ventanaPrincipal;

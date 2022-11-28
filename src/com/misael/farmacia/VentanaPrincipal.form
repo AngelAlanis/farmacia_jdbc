@@ -151,7 +151,7 @@
                     <properties>
                       <font size="28" style="1"/>
                       <foreground color="-16739363"/>
-                      <text value="$0"/>
+                      <text value="$0.0"/>
                     </properties>
                   </component>
                   <hspacer id="e9fef">

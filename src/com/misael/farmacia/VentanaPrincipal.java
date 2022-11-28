@@ -5,15 +5,6 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,6 +19,15 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Properties;
+import java.util.Vector;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -106,6 +106,7 @@ public class VentanaPrincipal extends JFrame {
 
     private double totalAPagar;
     private double totalPagado;
+    private int    productosEnVenta;
 
     private final Vector<String> columnasAbastecimientos         = new Vector<>(Arrays.asList("Clave", "Fecha", "Clave Proveedor", "ID Detalles", "Importe", "Total pagado", "Restante"));
     private final Vector<String> columnasDetallesAbastecimientos = new Vector<>(Arrays.asList("Folio", "ID Detalles", "Folio Producto", "Descripcion", "Abastecimiento", "Cantidad"));
@@ -569,6 +570,22 @@ public class VentanaPrincipal extends JFrame {
             ventanaBuscarVenta.setVisible(true);
         });
 
+        btnEliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int    selectedRow = tableVenta.getSelectedRow();
+                int    cantidad    = Integer.parseInt(tableVenta.getValueAt(selectedRow, 3).toString());
+                double costo       = Double.parseDouble(tableVenta.getValueAt(selectedRow, 4).toString());
+                ((DefaultTableModel) tableVenta.getModel()).removeRow(selectedRow);
+
+                totalAPagar -= costo;
+                productosEnVenta -= cantidad;
+
+                labelCantidadProductos.setText(productosEnVenta + " productos en la venta actual");
+                labelCostoTotal.setText("$" + totalAPagar);
+            }
+        });
+
         btnCobrar.addActionListener(e -> {
             ArrayList<VentaTienda> listaProductos = new ArrayList<>();
 
@@ -783,7 +800,9 @@ public class VentanaPrincipal extends JFrame {
         ((DefaultTableModel) tableVenta.getModel()).addRow(ventaTienda.getValores());
 
         totalAPagar += ventaTienda.getImporte();
+        productosEnVenta += ventaTienda.getCantidad();
 
+        labelCantidadProductos.setText(productosEnVenta + " productos en la venta actual");
         labelCostoTotal.setText("$" + totalAPagar);
     }
 

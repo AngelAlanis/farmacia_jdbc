@@ -608,8 +608,11 @@ public class VentanaPrincipal extends JFrame {
 
             Ticket ticket = new Ticket(listaProductos, totalAPagar, totalPagado, numeroTicket);
 
-            totalAPagar = 0;
-            totalPagado = 0;
+            totalAPagar      = 0;
+            totalPagado      = 0;
+            productosEnVenta = 0;
+
+            labelCantidadProductos.setText("0 productos en la venta actual");
             labelCostoTotal.setText("$0");
             actualizarTablaHistorialVentas();
             actualizarTablaProductos();

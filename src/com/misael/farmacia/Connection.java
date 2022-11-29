@@ -26,7 +26,7 @@ public class Connection {
             System.out.println("Conexión realizada con la base de datos");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-            System.out.println("Problemas al conectar");
+            JOptionPane.showMessageDialog(null, "No se puede conectar a la base de datos, asegúrese que esté conectado.");
             System.exit(0);
         }
     }

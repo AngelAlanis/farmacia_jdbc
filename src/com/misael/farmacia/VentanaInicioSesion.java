@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -33,22 +34,27 @@ public class VentanaInicioSesion extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                if (connection == null) {
-                    connection = new Connection();
-                }
+                try {
+                    if (connection == null) {
+                        connection = new Connection();
+                    }
 
-                String usuario  = utilidades.verificarTexto(tfUsuario.getText());
-                String password = utilidades.verificarTexto(String.valueOf(tfContraseña.getPassword()));
+                    String usuario  = utilidades.verificarTexto(tfUsuario.getText());
+                    String password = utilidades.verificarTexto(String.valueOf(tfContraseña.getPassword()));
 
-                hasAccess = connection.inicioCorrecto(usuario, password);
+                    hasAccess = connection.inicioCorrecto(usuario, password);
 
-                if (hasAccess) {
-                    isAdmin    = connection.isAdmin(usuario);
-                    idEmpleado = connection.getIdEmpleado(usuario);
-                    VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(connection, isAdmin, idEmpleado);
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Datos de inicio de sesión incorrectos o no existen", "Error", JOptionPane.ERROR_MESSAGE);
+                    if (hasAccess) {
+                        isAdmin    = connection.isAdmin(usuario);
+                        idEmpleado = connection.getIdEmpleado(usuario);
+                        VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(connection, isAdmin, idEmpleado);
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Datos de inicio de sesión incorrectos o no existen", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (HeadlessException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, ex);
                 }
             }
         });

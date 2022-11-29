@@ -112,7 +112,7 @@ public class Ticket {
             contentStream.endText();
             contentStream.close();
 
-            pdDocument.save(new File("src/resources/tickets", numeroTicket + ".pdf"));
+            pdDocument.save(new File(System.getProperty("user.home"), "/Desktop/" + numeroTicket + ".pdf"));
             pdDocument.close();
 
         } catch (IOException e) {

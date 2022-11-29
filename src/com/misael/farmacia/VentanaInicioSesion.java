@@ -77,6 +77,7 @@ public class VentanaInicioSesion extends JFrame {
         hasAccess       = false;
         isAdmin         = false;
         this.connection = connection;
+        setIconImage(utilidades.image("/resources/logoSinTexto.png"));
         setTitle("Inicio de sesión");
         setSize(480, 600);
         setContentPane(panelPrincipal);

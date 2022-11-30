@@ -19,7 +19,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -587,14 +586,19 @@ public class VentanaPrincipal extends JFrame {
         });
 
         btnCobrar.addActionListener(e -> {
-            ArrayList<VentaTienda> listaProductos = new ArrayList<>();
-
             try {
                 totalPagado = Double.parseDouble(JOptionPane.showInputDialog(null, "Ingrese la cantidad del cliente."));
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Ingresa un valor correcto.");
                 return;
             }
+
+            if (totalPagado < totalAPagar) {
+                JOptionPane.showMessageDialog(null, "La cantidad ingresada es menor a la cantidad a pagar.");
+                return;
+            }
+
+            ArrayList<VentaTienda> listaProductos = new ArrayList<>();
 
             connection.insertarVenta(new Venta(idEmpleado, totalAPagar, totalPagado));
 

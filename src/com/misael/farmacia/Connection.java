@@ -23,7 +23,7 @@ public class Connection {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             db_connection = DriverManager.getConnection("jdbc:mysql://localhost/farmacia?allowMultiQueries=true&user=root&password=");
-            System.out.println("Conexión realizada con la base de datos");
+            JOptionPane.showMessageDialog(null, "Conexión realizada con la base de datos");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "No se puede conectar a la base de datos, asegúrese que esté conectado.");
@@ -519,8 +519,9 @@ public class Connection {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             encontrado = resultSet.next();
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al verificar los datos de inicio de sesión: " + ex);
         }
 
         return encontrado;
@@ -561,7 +562,7 @@ public class Connection {
         int idMax = 0;
         try {
             PreparedStatement statementID = db_connection.prepareStatement("SELECT MAX(" + columna + ") FROM " + tabla);
-            ResultSet resultSet = statementID.executeQuery();
+            ResultSet         resultSet   = statementID.executeQuery();
             resultSet.next();
             idMax = resultSet.getInt(1);
         } catch (SQLException e) {
